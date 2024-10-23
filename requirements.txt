@@ -1,3 +1,4 @@
 selenium==4.14.0
 pandas==2.2.3
 xrld==2.0.1
+openpyxl==3.1.5
