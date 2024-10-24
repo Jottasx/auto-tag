@@ -23,6 +23,9 @@ class Browser():
         service = Service(path)
         self.__driver = webdriver.Chrome(service=service, options=chrome_options)
 
+    def get_driver(self):
+        return self.__driver
+
     def __redirect_to(self, url: str):
         self.driver.get(url)
 
