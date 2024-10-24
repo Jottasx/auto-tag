@@ -57,10 +57,11 @@ class Sasoi006():
             .click()
         
         # Redireciona para a tela SASOI006 do Save Web
-        self.get_browser().__redirect_to(f'https://srvapp{branch}.br-atacadao.corp/sasoi006/execute.do')
+        self.get_browser()\
+            .__redirect_to(f'https://srvapp{branch}.br-atacadao.corp/sasoi006/execute.do')
     
     # Esse método prepara a tela para enviar os códigos do SaveWeb para o TagSell
-    def setup_tag(self, type: str):
+    def setup_tag(self):
         self.get_browser().wait_for_element(By.ID, 'tpImpressao_1')\
             .click()
         
