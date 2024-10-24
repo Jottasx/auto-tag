@@ -5,18 +5,15 @@ from model.product import Product
 
 class Sheet():
 
-    df: DataFrame = None
-
     def __init__(self, path: str) -> None:
         try:
-            self.df = pd.read_excel(path, dtype={'preço': float})
+            self.__df = pd.read_excel(path, dtype={'preço': float})
         except FileNotFoundError as Error:
             print(f'[Erro] A planilha não foi encontrada no caminho "{path}", verifique se o caminho está correto.')
        
-
     def get_products(self) -> List[Product]:
         products = []
-        for i, row in self.df.iterrows():
+        for i, row in self.__df.iterrows():
             products.append(
                 Product(
                     id=None,

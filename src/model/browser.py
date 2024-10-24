@@ -9,13 +9,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchWindowException
 from selenium.webdriver.remote.webelement import WebElement
 
-import time
-import re
-
 
 class Browser():
-
-    __driver: webdriver.Chrome = None
 
     def __init__(self, path: str) -> None:
         chrome_options = Options()
@@ -27,7 +22,7 @@ class Browser():
         return self.__driver
 
     def __redirect_to(self, url: str):
-        self.driver.get(url)
+        self.__driver.get(url)
 
     def wait_for_element(self, by: By, identification: str):
         return WebDriverWait(self.__driver, 4).until(

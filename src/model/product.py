@@ -1,4 +1,5 @@
 class Product():
+    
     def __init__(self, id: str|None, code: str, description: str|None, price: float, emb: str, link: str|None, edited: bool, printed: bool) -> None:
         self.__id = id
         self.__code = code

@@ -7,14 +7,11 @@ import time
 
 class Sasoi006():
 
-    __products: List[Product] = []
-    __browser: Browser = None
-    __product_counter: int = int(0)
-    __product_limit: int = int(21)
-
     def __init__(self, browser: Browser, products: List[Product]):
         self.__products = products
-        self.__browser - browser
+        self.__browser = browser
+        self.__product_counter: int = int(0) 
+        self.__product_limit: int = int(21)
 
     def get_products(self):
         return self.__products
