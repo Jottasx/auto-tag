@@ -24,16 +24,14 @@ class Browser():
     def redirect_to(self, url: str):
         self.__driver.get(url)
 
-    def wait_for_element(self, by: By, identification: str):
-        return WebDriverWait(self.__driver, 4).until(
+    def wait_for_element(self, el: WebElement|None, by: By, identification: str):
+        # Se for recebido um elemento HTML, ele será usado
+        #  caso contrário por padrão será usado o driver do Browser
+        target = (self.__driver if el == None else el)
+        return WebDriverWait(target, 4).until(
             EC.visibility_of_element_located((by, identification))
         )
     
-    def wait_for_be_clickable(self, by: By, identification: str):
-        return WebDriverWait(self.__driver, 4).until(
-            EC.element_to_be_clickable((by, identification))
-        )
-
     def open_new_tab(self, el: WebElement):
         ActionChains(self.__driver).key_down(Keys.CONTROL).click(el).key_up(Keys.CONTROL).perform()
 
