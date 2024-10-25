@@ -29,6 +29,9 @@ class Sasoi006():
         return self.__product_limit
     
     def login(self, login: str, password: str, branch: str):
+        self.get_browser()\
+            .redirect_to("https://srvapp619.br-atacadao.corp/auth/login.do?lang=pt")
+        
         # Username
         self.get_browser()\
             .wait_for_be_clickable(By.ID, 'j_username_fake')\
