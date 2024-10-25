@@ -7,14 +7,10 @@ import time
 
 class Sasoi006():
 
-    def __init__(self, browser: Browser, products: List[Product]):
-        self.__products = products
+    def __init__(self, browser: Browser):
         self.__browser = browser
         self.__product_counter: int = int(0) 
         self.__product_limit: int = int(21)
-
-    def get_products(self):
-        return self.__products
     
     def get_browser(self):
         return self.__browser
@@ -80,7 +76,7 @@ class Sasoi006():
         select_tag.send_keys(Keys.ARROW_DOWN)
         select_tag.send_keys(Keys.ENTER)
 
-    def fill_products(self):
+    def fill_products(self, products: List[Product]):
         # Seleciona o campo para preencher o código do produto
         code_field = self.get_browser()\
             .wait_for_element(By.ID, 'codigoBarra')
@@ -89,7 +85,7 @@ class Sasoi006():
         self.setup_tag()
 
         # Percorre a lista de produtos e para cada produto preenche o campo de código
-        for product in self.get_products():
+        for product in products:
             
             # Temos que adiconar 100 ao final do código para o sistema reconhecer o código completo
             code_field.send_keys(str(product.get_code())+'100') 
