@@ -35,12 +35,15 @@ class Sasoi006():
             .send_keys(login)
         # Password
         self.get_browser()\
-            .wait_for_be_clickable(By.ID, 'j_username_fake')\
+            .wait_for_be_clickable(By.ID, 'j_password_fake')\
             .send_keys(password)
         # Login
         self.get_browser()\
             .wait_for_element(By.ID, 'entrar')\
             .click()
+        
+        # Aguarda o tempo da pagina carregar
+        time.sleep(2)
         
         # Escolhe a filial que vamos logar... ¬¬
         branch_checkbox = self.get_browser()\
@@ -55,7 +58,7 @@ class Sasoi006():
         
         # Redireciona para a tela SASOI006 do Save Web
         self.get_browser()\
-            .__redirect_to(f'https://srvapp{branch}.br-atacadao.corp/sasoi006/execute.do')
+            .redirect_to(f'https://srvapp{branch}.br-atacadao.corp/sasoi006/execute.do')
     
     # Esse método prepara a tela para enviar os códigos do SaveWeb para o TagSell
     def setup_tag(self):
@@ -79,21 +82,26 @@ class Sasoi006():
         code_field = self.get_browser()\
             .wait_for_element(By.ID, 'codigoBarra')
         
+
+        self.setup_tag()
+
         # Percorre a lista de produtos e para cada produto preenche o campo de código
         for product in self.get_products():
-
+            
             # Temos que adiconar 100 ao final do código para o sistema reconhecer o código completo
-            code_field.send_keys(product.get_code()+'100') 
+            code_field.send_keys(str(product.get_code())+'100') 
             code_field.send_keys(Keys.ENTER)
             self.set_product_counter(self.get_product_counter() + 1)
             
             # Se os produtos preenchidos chegarem ao limite vamos tentar enviar para o TagSell
             if self.get_product_counter() == self.get_product_limit():
-                self.send_to_tagsell()
+                print("Enviando para o tagsell")
+                #self.send_to_tagsell()
 
-            # Se não atigir o limite de produtos e ainda restar, vamos tentar enviar para o TagSell
-            if self.get_product_counter() > 0:
-                self.send_to_tagsell()
+        # Se não atigir o limite de produtos e ainda restar, vamos tentar enviar para o TagSell
+        if self.get_product_counter() > 0:
+            print("Enviando para o tagsell")
+            #self.send_to_tagsell()
 
     def send_to_tagsell(self):
         self.get_browser()\
