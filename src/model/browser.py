@@ -21,7 +21,7 @@ class Browser():
     def get_driver(self):
         return self.__driver
 
-    def __redirect_to(self, url: str):
+    def redirect_to(self, url: str):
         self.__driver.get(url)
 
     def wait_for_element(self, by: By, identification: str):
