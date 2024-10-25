@@ -43,7 +43,7 @@ class Sasoi006():
             .click()
         
         # Aguarda o tempo da pagina carregar
-        time.sleep(2)
+        time.sleep(1)
         
         # Escolhe a filial que vamos logar... ¬¬
         branch_checkbox = self.get_browser()\
@@ -100,8 +100,8 @@ class Sasoi006():
 
         # Se não atigir o limite de produtos e ainda restar, vamos tentar enviar para o TagSell
         if self.get_product_counter() > 0:
-            print("Enviando para o tagsell")
-            #self.send_to_tagsell()
+            print(f"[LOG] {self.get_product_counter()} produtos foram enviados para o TagSell")
+            self.send_to_tagsell()
 
     def send_to_tagsell(self):
         self.get_browser()\
@@ -112,6 +112,7 @@ class Sasoi006():
             
         # Após enviar para o TagSell temos que configurar novamente o checkbox para o modo Cartaz/A5  
         if self.get_product_counter() > 0:
+            print(f"[LOG] {self.get_product_counter()} produtos foram enviados para o TagSell")
             self.setup_tag()
 
         # Redefine a contagem de produtos
