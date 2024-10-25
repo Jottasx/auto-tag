@@ -25,6 +25,9 @@ class Product():
     def get_emb(self):
         return self.__emb
     
+    def set_product_link(self, link: str):
+        self.__link = link
+    
     def get_link(self):
         return self.__link
     
