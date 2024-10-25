@@ -101,9 +101,9 @@ class Sasoi006():
         # Se não atigir o limite de produtos e ainda restar, vamos tentar enviar para o TagSell
         if self.get_product_counter() > 0:
             print(f"[LOG] {self.get_product_counter()} produtos foram enviados para o TagSell")
-            self.send_to_tagsell()
+            self.__send_to_tagsell()
 
-    def send_to_tagsell(self):
+    def __send_to_tagsell(self):
         self.get_browser()\
             .wait_for_element(By.ID, 'btnImprimir')\
             .click()
@@ -113,7 +113,7 @@ class Sasoi006():
         # Após enviar para o TagSell temos que configurar novamente o checkbox para o modo Cartaz/A5  
         if self.get_product_counter() > 0:
             print(f"[LOG] {self.get_product_counter()} produtos foram enviados para o TagSell")
-            self.setup_tag()
+            self.__send_to_tagsell()
 
         # Redefine a contagem de produtos
         self.set_product_counter(int(0))
