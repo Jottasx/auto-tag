@@ -13,6 +13,9 @@ class Product():
     def get_id(self):
         return self.__id
     
+    def set_id(self, id: str):
+        self.__id = id
+    
     def get_code(self):
         return self.__code
     
