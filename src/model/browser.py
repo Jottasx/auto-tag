@@ -33,12 +33,6 @@ class Browser():
         return WebDriverWait(self.__driver, 4).until(
             EC.element_to_be_clickable((by, identification))
         )
-    
-    def login(self, login: str, password: str):
-        self.__redirect_to("https://app.tagsell.com.br/login")
-        self.__wait_for_element(self.__driver, By.ID, 'email').send_keys(login)
-        self.__wait_for_element(self.__driver, By.ID, 'password').send_keys(password)
-        self.__wait_for_element(self.__driver, By.XPATH, '//button[@type="submit"]').click()
 
     def open_new_tab(self, el: WebElement):
         ActionChains(self.__driver).key_down(Keys.CONTROL).click(el).key_up(Keys.CONTROL).perform()
