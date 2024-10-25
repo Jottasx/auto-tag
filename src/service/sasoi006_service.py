@@ -28,7 +28,7 @@ class Sasoi006():
     def get_product_limit(self):
         return self.__product_limit
     
-    def sasoi006_login(self, login: str, password: str, branch: str):
+    def login(self, login: str, password: str, branch: str):
         # Username
         self.get_browser()\
             .wait_for_be_clickable(By.ID, 'j_username_fake')\

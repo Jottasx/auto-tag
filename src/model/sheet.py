@@ -1,7 +1,7 @@
 import pandas as pd
 from pandas import DataFrame
 from typing import List
-from model.product import Product
+from src.model.product import Product
 
 class Sheet():
 
