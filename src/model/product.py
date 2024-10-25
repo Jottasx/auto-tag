@@ -34,6 +34,9 @@ class Product():
     def get_link(self):
         return self.__link
     
+    def set_edited(self, edited: bool):
+        self.__edited = edited
+    
     def is_edited(self):
         return self.__edited
     
