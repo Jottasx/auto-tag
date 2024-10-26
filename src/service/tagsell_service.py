@@ -16,6 +16,9 @@ class TagSell():
     def __get_browser(self):
         return self.__browser
     
+    def get_product_rows(self):
+        return self.__product_rows  
+    
     # Médoto para fazer login no TagSell
     def login(self, login: str, password: str):
         self.__get_browser()\
@@ -59,7 +62,6 @@ class TagSell():
 
     # Médoto para preencher a lista de linhas HTML dos produtos
     def set_product_rows(self, products: List[Product]):
-
         # Preenche uma lista somente com os códigos internos dos produtos
         product_codes = []
         for product in products:
@@ -77,21 +79,26 @@ class TagSell():
 
         # Para cada linha na lista de linhas
         for row in rows:
-            td_list = row.find_elements(By.TAG_NAME, "td")
-            # Para cada <td> dentro da linha
-            for td in td_list:
-                match = re.search(r':p:(\d+):d', td.text) # 5 digitos númericos entre :p: e :d
-                # Verifica se algum <td> possui o código interno do produto
-                if match:
-                    code_found = match.group(1) # Salva o código encontrado
-                    
-                    # Verifica se o código achado bate com algum código da lista
-                    #  e adiciona a linha na lista de linhas 
-                    if int(code_found) in product_codes:
-                        self.__product_rows.append(row)
+            for product in products:
+                if self.__is_in_row(product.get_code(), row):
+                    self.__product_rows.append(row)
+            
 
-    def get_product_rows(self):
-        return self.__product_rows
+    # Método para verificar se um código de um produto está em uma linha HTML
+    def __is_in_row(self, code: str, row: WebElement) -> bool:
+        rows = self.get_product_rows()
+        
+        td_list = row.find_elements(By.TAG_NAME, "td")
+        # Para cada <td> dentro da linha
+        for td in td_list:
+            match = re.search(r':p:(\d+):d', td.text) # 5 digitos númericos entre :p: e :d
+            # Verifica se algum <td> possui o código interno do produto
+            if match:
+                code_found = match.group(1) # Salva o código encontrado
+                if int(code_found) == code:
+                    return True
+        return False
+
                     
     # Médoto para editar um único produto
     def edit_product(self, product: Product) -> Product:
@@ -185,10 +192,47 @@ class TagSell():
 
 
     # Médoto para imprimir um produto
-    def print_product(self):
+    def print_products(self, products: List[Product]):
         rows = self.get_product_rows()
+        for row in rows:
+            row_id = self.__get_browser()\
+                    .wait_for_element(el=row, by=By.XPATH, identification='.//a[@title="Editar"]')\
+                    .get_attribute("href")\
+                    .split("/")[-2]
+            
+            for product in products:
+                # Verifica se o ID é o mesmo do produto e seleciona o checkbox para impressão
+                if row_id == product.get_id() and product.is_edited() == True:
+                    row.find_element(By.TAG_NAME, "td")\
+                        .find_element(By.ID, f"selectable-{product.get_id()}")\
+                        .click()
+                    time.sleep(1)
+                    product.set_printed(True)
+                
+            # O botão de imprimir só aparece após 1 ou mais checkbox forem selecionados
+            self.__get_browser()\
+                .wait_for_element(None, By.ID, 'printButton')\
+                .click()
+            
+            time.sleep(1)
+            
+            # Clica no botão sim do modal
+            self.__get_browser()\
+                .wait_for_element(None, By.XPATH, "//h5[contains(text(), 'Tem certeza que deseja imprimir?')]/ancestor::div[contains(@class, 'modal-content')]//button[contains(text(), 'Sim')]")\
+                .click()
+            
+            time.sleep(1)
 
+            # Navegar para a aba que acabou de abrir com as impressões
+            driver = self.__get_browser().get_driver()
+            tabs = driver.window_handles
+            original_window = tabs[0]
+            # A impressão é automaticamente feita em PDF e salvo em Downloads devido as configurações do Driver
+            driver.switch_to.window(tabs[-1])
 
+            time.sleep(1)
 
-        print(rows)
-        time.sleep(30)
+            driver.close()
+            # Retorna para a aba principal
+            driver.switch_to.window(original_window)
+            time.sleep(0.5)
