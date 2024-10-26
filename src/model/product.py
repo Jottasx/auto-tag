@@ -42,6 +42,9 @@ class Product():
     
     def is_printed(self):
         return self.__printed
+    
+    def set_printed(self, printed: bool):
+        self.is_printed = printed
 
     def __str__(self) -> str:
         return f'[ID: {self.get_id()} | Desc: {self.get_descritpion()[:7]} | Code: {self.get_code()} | EMB: {self.get_emb()} | Price: {self.get_price()}]'
