@@ -34,7 +34,13 @@ class TagSell():
             .click()
         
         time.sleep(1)
-        self.__get_browser().redirect_to("https://app.tagsell.com.br/online/posters")
+
+        # Se a página já estiver nos cartazes, não vai precisar redirecionar
+        link = "https://app.tagsell.com.br/online/posters"
+        driver = self.__get_browser().get_driver()
+        if driver.current_url != link:
+            self.__get_browser().redirect_to("https://app.tagsell.com.br/online/posters")
+
         time.sleep(1)
 
     # Médoto para rolar a tabela dinânica para que todos os elementos fiquem visíveis
