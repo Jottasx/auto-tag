@@ -15,6 +15,11 @@ class Browser():
     def __init__(self, path: str) -> None:
         chrome_options = Options()
         chrome_options.add_argument("--start-maximized")
+        chrome_options.add_argument('--kiosk-printing')
+        chrome_options.add_experimental_option("prefs", {
+            "printing.print_preview_sticky_settings.appState": '{"recentDestinations":[{"id":"Save as PDF","origin":"local"}],"selectedDestinationId":"Save as PDF","version":2}',
+            "savefile.default_directory": "C:\\Users\\lovej\\Downloads\\"
+        })
         service = Service(path)
         self.__driver = webdriver.Chrome(service=service, options=chrome_options)
 
@@ -30,15 +35,6 @@ class Browser():
         target = (self.__driver if el == None else el)
         return WebDriverWait(target, 4).until(
             EC.visibility_of_element_located((by, identification))
-        )
-    
-    # Use esta para esperar mais de 1 elemento
-    def wait_for_elements(self, el: WebElement|None, by: By, identification: str):
-        # Se for recebido um elemento HTML, ele será usado
-        #  caso contrário por padrão será usado o driver do Browser
-        target = (self.__driver if el == None else el)
-        return WebDriverWait(target, 4).until(
-            EC.visibility_of_all_elements_located((by, identification))
         )
     
     def open_new_tab(self, el: WebElement):
