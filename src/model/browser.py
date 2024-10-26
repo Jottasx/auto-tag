@@ -32,6 +32,15 @@ class Browser():
             EC.visibility_of_element_located((by, identification))
         )
     
+    # Use esta para esperar mais de 1 elemento
+    def wait_for_elements(self, el: WebElement|None, by: By, identification: str):
+        # Se for recebido um elemento HTML, ele será usado
+        #  caso contrário por padrão será usado o driver do Browser
+        target = (self.__driver if el == None else el)
+        return WebDriverWait(target, 4).until(
+            EC.visibility_of_all_elements_located((by, identification))
+        )
+    
     def open_new_tab(self, el: WebElement):
         ActionChains(self.__driver).key_down(Keys.CONTROL).click(el).key_up(Keys.CONTROL).perform()
 
