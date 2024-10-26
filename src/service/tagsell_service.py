@@ -39,7 +39,7 @@ class TagSell():
         link = "https://app.tagsell.com.br/online/posters"
         driver = self.__get_browser().get_driver()
         if driver.current_url != link:
-            self.__get_browser().redirect_to("https://app.tagsell.com.br/online/posters")
+            self.__get_browser().redirect_to(link)
 
         time.sleep(1)
 
