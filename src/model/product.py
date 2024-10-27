@@ -1,6 +1,19 @@
 class Product():
     
-    def __init__(self, id: str|None, code: str, description: str|None, price: float, emb: str, link: str|None, edited: bool, printed: bool) -> None:
+    def __init__(
+            self,
+            id: str|None,
+            code: str,
+            description: str|None,
+            price: float,
+            emb: str,
+            link: str|None,
+            edited: bool,
+            printed: bool,
+            local: str|None,
+            status: str|None
+        ) -> None:
+
         self.__id = id
         self.__code = code
         self.__descritpion = description
@@ -9,6 +22,8 @@ class Product():
         self.__link = link
         self.__edited = edited
         self.__printed = printed
+        self.__local = local,
+        self.__status = status
 
     def get_id(self):
         return self.__id
@@ -45,6 +60,18 @@ class Product():
     
     def set_printed(self, printed: bool):
         self.is_printed = printed
+
+    def set_local(self, local: str):
+        self.__local = local
+
+    def get_local(self):
+        return self.__local
+    
+    def set_status(self, status: str):
+        self.__status = status
+
+    def get_status(self):
+        return self.__status
 
     def __str__(self) -> str:
         return f'[ID: {self.get_id()} | Desc: {self.get_descritpion()[:7]} | Code: {self.get_code()} | EMB: {self.get_emb()} | Price: {self.get_price()}]'
