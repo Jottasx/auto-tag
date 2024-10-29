@@ -23,7 +23,9 @@ class Sheet():
                     emb=row['embb'],
                     link=None,
                     edited=False,
-                    printed=False
+                    printed=False,
+                    local=None,
+                    status=None
                 )
             )
 
