@@ -14,6 +14,10 @@ class Sheet():
     def get_products(self) -> List[Product]:
         products = []
         for i, row in self.__df.iterrows():
+            # Ignora célular onde a descrição está vazia (sem estoque na planilha)
+            if type(row['desc']) != str:
+                continue
+
             products.append(
                 Product(
                     id=None,
