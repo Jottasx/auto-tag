@@ -214,6 +214,7 @@ class MainWindow(customtkinter.CTk):
             font=("Inter", 12, "bold"),
             fg_color="#B2B2B2",
             image=img_clear,
+            command=self.clear_products,
             width=140,
             height=45,
             corner_radius=0
@@ -259,6 +260,10 @@ class MainWindow(customtkinter.CTk):
             return
             
         self.show_dialog_box("Nenhum arquivo foi selecionado.")
+
+    def clear_products(self):
+        self.table = Table(self, products=[])
+        self.table.grid(row=3, column=0, padx=(50, 0), pady=(1, 1), sticky="nsew")
         
 
     def show_dialog_box(self, txt):
