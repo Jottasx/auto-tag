@@ -3,10 +3,12 @@ from PIL import Image
 from src.UI.table import Table
 from src.UI.console import Console 
 from src.model.product import Product
+from src.model.sheet import Sheet
+from tkinter import filedialog, messagebox
 from typing import List
 
 class MainWindow(customtkinter.CTk):
-    def __init__(self, products: List[Product]):
+    def __init__(self):
         super().__init__()
         customtkinter.set_appearance_mode("light")
 
@@ -39,7 +41,7 @@ class MainWindow(customtkinter.CTk):
         self.table_title.grid(row=1, column=0, padx=(50, 0), pady=(50, 0), sticky="w")
 
         # Tabela
-        self.table = Table(master=self, products=products, width=650, height=450, corner_radius=0, fg_color="#DDD")
+        self.table = Table(master=self, products=[], width=650, height=450, corner_radius=0, fg_color="#DDD")
         self.table.grid(row=3, column=0, padx=(50, 0), pady=(1, 1), sticky="nsew")
 
 
@@ -68,7 +70,8 @@ class MainWindow(customtkinter.CTk):
             image=img_excel,
             width=140,
             height=45,
-            corner_radius=0
+            corner_radius=0,
+            command=self.load_products
         )
         self.btn_products.grid(row=3, column=2, padx=(80, 0), pady=(100, 1), sticky="ne")
 
@@ -241,3 +244,51 @@ class MainWindow(customtkinter.CTk):
         )
         self.credits.grid(row=7, column=0, padx=(50, 0), pady=(20, 0), sticky="nse")
         
+    def update_table(self, produtcs: List[Product]):
+        if len(produtcs) > 0:
+            self.table = Table(self,  produtcs)
+            self.table.grid(row=3, column=0, padx=(50, 0), pady=(1, 1), sticky="nsew")
+
+    def load_products(self):
+        file_path = filedialog.askopenfilename(title="Carregue a planilha com os produtos")
+        
+        if file_path:
+            sheet = Sheet(file_path)
+            self.show_dialog_box("Produtos importados com sucesso!")
+            self.update_table(sheet.get_products())
+            return
+            
+        self.show_dialog_box("Nenhum arquivo foi selecionado.")
+        
+
+    def show_dialog_box(self, txt):
+        dialog = customtkinter.CTkToplevel(self)
+        dialog.title("Importação de produtos")
+        dialog.geometry("300x150")
+
+        # Esse código centraliza a dialog no meio da janela principal
+        main_x = self.winfo_x()
+        main_y = self.winfo_y()
+        main_width = 1000
+        main_height = 877
+        dialog_width = 300
+        dialog_height = 150
+
+        pos_x = main_x + (main_width - dialog_width) // 2
+        pos_y = main_y + (main_height - dialog_height) // 2
+        dialog.geometry(f"{dialog_width}x{dialog_height}+{pos_x}+{pos_y}")
+
+        # Deixa a dialog em foco
+        dialog.grab_set()        
+
+        # Mensagem da dialog box
+        label = customtkinter.CTkLabel(
+            dialog,
+            text=txt,
+            font=("Arial", 14)
+        )
+        label.pack(pady=10)
+            
+        # Botão para fechar a dialog box
+        close_button = customtkinter.CTkButton(dialog, text="OK", command=dialog.destroy)
+        close_button.pack(pady=10)
