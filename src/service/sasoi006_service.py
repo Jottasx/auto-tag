@@ -10,7 +10,7 @@ class Sasoi006():
     def __init__(self, browser: Browser):
         self.__browser = browser
         self.__product_counter: int = int(0) 
-        self.__product_limit: int = int(21)
+        self.__product_limit: int = int(7)
     
     def get_browser(self):
         return self.__browser
