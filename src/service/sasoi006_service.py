@@ -30,15 +30,15 @@ class Sasoi006():
         
         # Username
         self.get_browser()\
-            .wait_for_be_clickable(By.ID, 'j_username_fake')\
+            .wait_for_element(None, By.ID, 'j_username_fake')\
             .send_keys(login)
         # Password
         self.get_browser()\
-            .wait_for_be_clickable(By.ID, 'j_password_fake')\
+            .wait_for_element(None, By.ID, 'j_password_fake')\
             .send_keys(password)
         # Login
         self.get_browser()\
-            .wait_for_element(By.ID, 'entrar')\
+            .wait_for_element(None, By.ID, 'entrar')\
             .click()
         
         # Aguarda o tempo da pagina carregar
@@ -46,13 +46,13 @@ class Sasoi006():
         
         # Escolhe a filial que vamos logar... ¬¬
         branch_checkbox = self.get_browser()\
-            .wait_for_element(By.ID, 'filialAutocomplete')
+            .wait_for_element(None, By.ID, 'filialAutocomplete')
         branch_checkbox.send_keys(branch)
         branch_checkbox.send_keys(Keys.ARROW_DOWN)
         branch_checkbox.send_keys(Keys.ENTER)
 
         # Confirma a entrada
-        self.get_browser().wait_for_element(By.ID, 'entrarFilial')\
+        self.get_browser().wait_for_element(None, By.ID, 'entrarFilial')\
             .click()
         
         # Redireciona para a tela SASOI006 do Save Web
@@ -61,12 +61,12 @@ class Sasoi006():
     
     # Esse método prepara a tela para enviar os códigos do SaveWeb para o TagSell
     def setup_tag(self):
-        self.get_browser().wait_for_element(By.ID, 'tpImpressao_1')\
+        self.get_browser().wait_for_element(None, By.ID, 'tpImpressao_1')\
             .click()
         
         # Clica no checkbox referente a 'Cartaz' no SaveWeb
         select_tag = self.get_browser()\
-            .wait_for_element(By.ID, 'comboCartaz')
+            .wait_for_element(None, By.ID, 'comboCartaz')
         
         # Seleciona a opção A5 para enviar ao Tagsell
         select_tag.send_keys(Keys.ARROW_DOWN)
@@ -79,9 +79,8 @@ class Sasoi006():
     def fill_products(self, products: List[Product]):
         # Seleciona o campo para preencher o código do produto
         code_field = self.get_browser()\
-            .wait_for_element(By.ID, 'codigoBarra')
+            .wait_for_element(None, By.ID, 'codigoBarra')
         
-
         self.setup_tag()
 
         # Percorre a lista de produtos e para cada produto preenche o campo de código
@@ -104,7 +103,7 @@ class Sasoi006():
 
     def __send_to_tagsell(self):
         self.get_browser()\
-            .wait_for_element(By.ID, 'btnImprimir')\
+            .wait_for_element(None, By.ID, 'btnImprimir')\
             .click()
         # Após enviar para o TagSell o sistema trava por uns 2 segundos, então tesmo que esperar
         time.sleep(2)
