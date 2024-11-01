@@ -10,8 +10,8 @@ class Product():
             link: str|None,
             edited: bool,
             printed: bool,
-            local: str|None,
-            status: str|None
+            status = 1,
+            local = 1,
         ) -> None:
 
         self.__id = id
@@ -22,7 +22,7 @@ class Product():
         self.__link = link
         self.__edited = edited
         self.__printed = printed
-        self.__local = local,
+        self.__local = local
         self.__status = status
 
     def get_id(self):
@@ -61,13 +61,13 @@ class Product():
     def set_printed(self, printed: bool):
         self.is_printed = printed
 
-    def set_local(self, local: str):
+    def set_local(self, local: int):
         self.__local = local
 
     def get_local(self):
         return self.__local
     
-    def set_status(self, status: str):
+    def set_status(self, status: int):
         self.__status = status
 
     def get_status(self):
