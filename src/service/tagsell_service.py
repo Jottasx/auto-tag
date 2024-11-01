@@ -1,7 +1,7 @@
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 from src.model.product import Product
-from src.model.browser import Browser
+from service.selenium_service import Browser
 from typing import List
 import time
 import re
@@ -68,11 +68,6 @@ class TagSell():
 
     # Médoto para preencher a lista de linhas HTML dos produtos
     def set_product_rows(self, products: List[Product]):
-        # Preenche uma lista somente com os códigos internos dos produtos
-        product_codes = []
-        for product in products:
-            product_codes.append(product.get_code())
-
         # Tabela HTML do TagSell
         table = self.__get_browser()\
             .wait_for_element(None, By.CSS_SELECTOR, ".table.table-striped.table-fw-widget.table-hover")
@@ -88,13 +83,34 @@ class TagSell():
             for product in products:
                 if self.__is_in_row(product.get_code(), row):
                     self.__product_rows.append(row)
-            
+
+    # Método para transformar os rascunhos do TagSell em Cartazes
+    # def handle_sketch(self, products: List[Product]):
+    #     self.__get_browser()\
+    #         .redirect_to("https://app.tagsell.com.br/online/automation/posters")           
+    #     time.sleep(4)
+
+    #     self.set_product_rows(products)
+
+    #     rows = self.get_product_rows()
+
+    #     for row in rows:
+    #         for product in products:
+    #             if self.__is_in_row(code=product.get_code(), tr=row):
+    #                 row.find_element(By.XPATH, "//input[contains(@type='checkbox')]")\
+    #                     .click()
+
+    #     time.sleep(1)
+
+    #     self.__get_browser()\
+    #         .wait_for_element(None, By.ID, "printButton")\
+    #         .click()
+
+    #     time.sleep(30) 
 
     # Método para verificar se um código de um produto está em uma linha HTML
-    def __is_in_row(self, code: str, row: WebElement) -> bool:
-        rows = self.get_product_rows()
-        
-        td_list = row.find_elements(By.TAG_NAME, "td")
+    def __is_in_row(self, code: str, tr: WebElement) -> bool:
+        td_list = tr.find_elements(By.TAG_NAME, "td")
         # Para cada <td> dentro da linha
         for td in td_list:
             match = re.search(r':p:(\d+):d', td.text) # 5 digitos númericos entre :p: e :d

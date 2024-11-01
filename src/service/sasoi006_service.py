@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from src.model.product import Product
-from src.model.browser import Browser
+from service.selenium_service import Browser
 from typing import List
 import time
 
@@ -10,7 +10,7 @@ class Sasoi006():
     def __init__(self, browser: Browser):
         self.__browser = browser
         self.__product_counter: int = int(0) 
-        self.__product_limit: int = int(7)
+        self.__product_limit: int = int(5)
     
     def get_browser(self):
         return self.__browser
@@ -93,8 +93,7 @@ class Sasoi006():
             
             # Se os produtos preenchidos chegarem ao limite vamos tentar enviar para o TagSell
             if self.get_product_counter() == self.get_product_limit():
-                print("Enviando para o tagsell")
-                #self.send_to_tagsell()
+                self.send_to_tagsell()
 
         # Se não atigir o limite de produtos e ainda restar, vamos tentar enviar para o TagSell
         if self.get_product_counter() > 0:
