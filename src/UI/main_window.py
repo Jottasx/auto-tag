@@ -2,20 +2,30 @@ import customtkinter
 from PIL import Image
 from src.UI.table import Table
 from src.UI.console import Console 
+from src.model.browser import Browser
 from src.model.product import Product
 from src.model.sheet import Sheet
+from src.service.tagsell_service import TagSell
+from src.service.sasoi006_service import Sasoi006
 from tkinter import filedialog, messagebox
 from typing import List
+from dotenv import load_dotenv
+import os
 
 class MainWindow(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         customtkinter.set_appearance_mode("light")
 
+        load_dotenv()
+
         # Configurações da janela
         self.geometry("1000x877")
         self.title("Auto Tag")
         self.resizable(False, False)
+
+        # Produtos
+        self.__products = []
 
         # Widgets -----------------------------------------------------------
         # "Logo"
@@ -98,6 +108,7 @@ class MainWindow(customtkinter.CTk):
             font=("Inter", 12, "bold"),
             fg_color="#B2B2B2",
             image=img_sasoi006,
+            command=self.send_to_sasoi006,
             width=140,
             height=45,
             corner_radius=0
@@ -128,6 +139,7 @@ class MainWindow(customtkinter.CTk):
             font=("Inter", 12, "bold"),
             fg_color="#B2B2B2",
             image=img_tagsell,
+            command=self.send_to_tagsell,
             width=140,
             height=45,
             corner_radius=0
@@ -245,6 +257,12 @@ class MainWindow(customtkinter.CTk):
         )
         self.credits.grid(row=7, column=0, padx=(50, 0), pady=(20, 0), sticky="nse")
         
+    def set_products(self, products: List[Product]):
+        self.__products = products
+
+    def get_products(self):
+        return self.__products
+    
     def update_table(self, produtcs: List[Product]):
         if len(produtcs) > 0:
             self.table = Table(self,  produtcs)
@@ -255,11 +273,32 @@ class MainWindow(customtkinter.CTk):
         
         if file_path:
             sheet = Sheet(file_path)
+            self.products = self.set_products(sheet.get_products())
+            self.update_table(self.get_products())
             self.show_dialog_box("Produtos importados com sucesso!")
-            self.update_table(sheet.get_products())
             return
             
         self.show_dialog_box("Nenhum arquivo foi selecionado.")
+
+    def send_to_sasoi006(self):
+        if len(self.get_products()) > 0:
+            browser = Browser("./src/driver/chromedriver.exe")
+            sasoi006 = Sasoi006(browser)
+            sasoi006.login(
+                os.environ['SAVE_WEB_LOGIN'],
+                os.environ['SAVE_WEB_PASS'],
+                os.environ['SAVE_WEB_BRANCH']
+            )
+            sasoi006.fill_products(self.get_products())
+            return
+
+        self.show_dialog_box("Não existem produtos para ser enviados")
+
+    def send_to_tagsell(self):
+        browser = Browser("./src/driver/chromedriver.exe")
+        tagsell = TagSell(browser)
+        tagsell.login(login=os.environ["TAG_SELL_LOGIN"], password=os.environ["TAG_SELL_PASS"])
+        tagsell.handle_sketch(self.get_products())
 
     def clear_products(self):
         self.table = Table(self, products=[])

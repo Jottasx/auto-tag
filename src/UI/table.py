@@ -7,13 +7,14 @@ class Table(customtkinter.CTkScrollableFrame):
         super().__init__(master, **kwargs)
 
         # Cabeçalho da tabela (COD, Desc, Emb, Preço, Local, Status)
-        self.table_header = TableHead(master=self, width=650, height=30, corner_radius=0, fg_color="#000")
+        self.table_header = TableHead(master=self, width=650, height=30, corner_radius=0, fg_color="#000", command=self.toggle_checkboxes)
         self.table_header.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")
+        self.table_rows: List[TableRow] = []
 
         if len(products) > 0:
             for i, product in enumerate(products):
                 # Linhas da tabela
-                self.table_row = TableRow(
+                self.table_rows.append(TableRow(
                         master=self,
                         width=650,
                         height=30,
@@ -26,13 +27,26 @@ class Table(customtkinter.CTkScrollableFrame):
                         status=product.get_status(),
                         local=product.get_local(),
                         row=i,
-                        checked=True
-                    )
-                self.table_row.grid(row=i+1, column=0, padx=0, pady=0, sticky="nsew")
+                        checked=False
+                    ))
+                
+            # Inserir uma linha abaixo da outra
+            for row in self.table_rows:
+                row.grid(row=row.row+1, column=0, padx=0, pady=0, sticky="nsew")
+
+    def toggle_checkboxes(self):
+        is_checked = self.table_header.checkbox.get()
+
+        if is_checked:
+            for row in self.table_rows:
+                row.checkbox.select()
+        else:
+            for row in self.table_rows:
+                row.checkbox.deselect()
 
         
 class TableHead(customtkinter.CTkFrame):
-    def __init__(self, master, **kwargs):
+    def __init__(self, master, command, **kwargs):
         super().__init__(master, **kwargs)
 
         self.checkbox = customtkinter.CTkCheckBox(
@@ -41,6 +55,7 @@ class TableHead(customtkinter.CTkFrame):
             border_width=1,
             text=None,
             width=20,
+            command=command,
             height=20
         )
         self.checkbox.grid(row=3, column=0, padx=(2, 2), pady=(2, 2), sticky="nsew",)
@@ -96,6 +111,8 @@ class TableHead(customtkinter.CTkFrame):
 class TableRow(customtkinter.CTkFrame):
     def __init__(self, master, checked: bool, code: str, desc: str, emb: str, price: str, local: str, status: str, row: int, **kwargs):
         super().__init__(master, **kwargs)
+        #
+        self.row = row
 
         self.checkbox = customtkinter.CTkCheckBox(
             self,
@@ -103,8 +120,9 @@ class TableRow(customtkinter.CTkFrame):
             border_width=1,
             text=None,
             width=20,
-            height=20
+            height=20,
         )
+        self.checkbox.select(checked)
         self.checkbox.grid(row=row+4, column=0, padx=(2, 2), pady=(2, 2), sticky="nsew",)
 
         self.td_2 = customtkinter.CTkLabel(
