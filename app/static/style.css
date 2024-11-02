@@ -1,0 +1,144 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    align-self: flex-start;
+    margin-top: 2rem;
+    grid-area: logo;
+}
+
+.container {
+    width: 1000px;
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "logo logo"
+        "product-list sidebar"
+        "log-section log-section";
+    gap: 20px;
+}
+
+.product-list, .sidebar, .log-section {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.product-list {
+    grid-area: product-list;
+}
+
+.table-container {
+    height: 23rem;
+    overflow-y: auto;
+}
+
+/* Tabela de produtos */
+.product-list h2 {
+    margin: 0 0 10px;
+    font-size: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #000;
+    color: #fff;
+}
+
+.button {
+    margin: 10px 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: #000;
+    background-color: #e0e0e0;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.button:hover {
+    background-color: #cfcdcd;
+}
+
+.button-green { background-color: #28a745; }
+.button-red { background-color: #dc3545; }
+.button-gray { background-color: #6c757d; }
+
+/* Sidebar */
+.sidebar {
+    max-height: 14rem;
+    grid-area: sidebar;
+}
+.sidebar button {
+    margin: 10px 0;
+    width: 100%;
+}
+
+.sidebar button {
+    background-color: #e0e0e0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+.sidebar button:hover {
+    background-color: #cfcdcd;
+}
+
+.sidebar img {
+    margin-right: 1rem;
+}
+
+/* Log Section */
+.log-section h3 {
+    margin-top: 0;
+}
+
+.log-output {
+    background-color: #f4f4f4;
+    padding: 10px;
+    height: 100px;
+    overflow-y: scroll;
+    font-size: 14px;
+    color: #000;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
