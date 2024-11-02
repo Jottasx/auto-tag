@@ -1,4 +1,6 @@
 import json
+from app.enum.local import get_local_name
+from app.enum.status import get_status_name
 
 class Product():
     
@@ -12,8 +14,8 @@ class Product():
             link: str|None,
             edited: bool,
             printed: bool,
-            status = 1,
-            local = 1,
+            status = get_status_name(1),
+            local = get_local_name(1),
         ) -> None:
 
         self.__id = id
