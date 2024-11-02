@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Tag</title>
+    <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
+    <script src={{ url_for('static', filename='script.js') }} defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="logo">AUTO TAG</h1>
+        <div class="product-list">
+            <h2>Lista de produtos:</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox"></th>
+                            <th>COD</th>
+                            <th>Desc</th>
+                            <th>Emb</th>
+                            <th>Preço</th>
+                            <th>Local</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- <tr>
+                            <td><input type="checkbox"></td>
+                            <td>5810</td>
+                            <td>HF-ALFACE CRESPA HIDROPONICA</td>
+                            <td>UND 1 X 1 X 1UND</td>
+                            <td>R$ 5,29</td>
+                            <td>tagsell</td>
+                            <td>impresso</td>
+                        </tr> -->
+
+                        
+    
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="button">
+                    <img src="{{ url_for('static', filename='img/price_icon.png') }}" alt="">
+                    Preço
+                </button>
+                <button class="button">
+                    <img src="{{ url_for('static', filename='img/pdf_icon.png') }}" alt="">
+                    Imprimir
+                </button>
+                <button class="button">
+                    <img src="{{ url_for('static', filename='img/clear_icon.png') }}" alt="">
+                    Limpar
+                </button>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <input type="file" id="file-input" style="display: none;">
+            <button id="btn_load_product">
+                <img src="{{ url_for('static', filename='img/excel_icon.png') }}" alt="">
+                PRODUTOS
+            </button>
+            <button>
+                <img src="{{ url_for('static', filename='img/sasoi006_icon.png') }}" alt="">
+                SASOI006
+            </button>
+            <button>
+                <img src="{{ url_for('static', filename='img/tagsell_icon.png') }}" alt="">
+                TAGSELL
+            </button>
+        </div>
+
+        <div class="log-section" style="grid-column: 1 / -1;">
+            <h3>Log do sistema:</h3>
+            <div class="log-output">
+                [OK] LOG → LOG.LOG<br>
+                [OK] LOG → LOG.LOG<br>
+                [OK] LOG → LOG.LOG<br>
+                [OK] LOG → LOG.LOG
+            </div>
+        </div>
+    </div>
+</body>
+</html>
