@@ -13,10 +13,10 @@
         <div class="product-list">
             <h2>Lista de produtos:</h2>
             <div class="table-container">
-                <table>
+                <table id="table">
                     <thead>
                         <tr>
-                            <th><input type="checkbox"></th>
+                            <th><input type="checkbox" id="select_all"></th>
                             <th>COD</th>
                             <th>Desc</th>
                             <th>Emb</th>
@@ -59,7 +59,7 @@
         </div>
 
         <div class="sidebar">
-            <input type="file" id="file-input" style="display: none;">
+            <input type="file" id="file_input" style="display: none;">
             <button id="btn_load_product">
                 <img src="{{ url_for('static', filename='img/excel_icon.png') }}" alt="">
                 PRODUTOS
