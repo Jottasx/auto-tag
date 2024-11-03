@@ -1,9 +1,11 @@
 const file_input = document.getElementById("file_input");
 const table = document.getElementById("table");
 const btn_product = document.getElementById("btn_load_product");
+const btn_sasoi006 = document.getElementById("btn_send_to_sasoi006");
 
 let products = [];
-let decoded_product = [];
+let checked_products = [];
+let decoded_products = [];
 
 // Configurando o Proxy para observar alterações no array products
 products = new Proxy(products, {
@@ -19,7 +21,7 @@ function updateProducts(product_list) {
     product_list.forEach(product => {
         products.push(product); // Adiciona cada produto ao array observado
     });
-}
+};
 
 // Função para atualizar a tabela
 function updateTable() {
@@ -50,15 +52,16 @@ function updateTable() {
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
+        checkbox.id = products[i]._Product__code
 
         cell_1.append(checkbox);
         cell_2.innerText = products[i]._Product__code;
         cell_3.innerText = products[i]._Product__descritpion;
         cell_4.innerText = products[i]._Product__emb;
-        cell_5.innerText = `$R$ ${products[i]._Product__price}`.replace('.', ',');
+        cell_5.innerText = `R$ ${products[i]._Product__price}`.replace('.', ',');
         cell_6.innerText = products[i]._Product__local;
         cell_7.innerText = products[i]._Product__status;
-    }
+    };
 
     document.getElementById("select_all").addEventListener("click", (event) => {
         const inputs = table.querySelectorAll("input[type='checkbox']");
@@ -66,6 +69,7 @@ function updateTable() {
             element.checked = event.target.checked; // Marca ou desmarca todos os checkboxes
         });
     });
+
 }
 
 // Evento para abrir o seletor de arquivos
@@ -86,8 +90,8 @@ file_input.addEventListener("change", () => {
         })
         .then(res => res.json())
         .then(data => {
-            decoded_product = data.products.map(product => JSON.parse(product));
-            updateProducts(decoded_product); // Atualiza o array products, que chama updateTable
+            decoded_products = data.products.map(product => JSON.parse(product));
+            updateProducts(decoded_products); // Atualiza o array products, que chama updateTable
         })
         .catch(error => {
             console.error("Erro ao carregar dados:", error);
