@@ -9,4 +9,4 @@ class Product(db.Model):
     link = db.Column(db.String(300), nullable=True)
     edited = db.Column(db.Integer, nullable=False)
     printed = db.Column(db.Integer, nullable=False)
-    local = db.Column(db.Integer, nullable=False)
+    local = db.Column(db.String(20), nullable=False)

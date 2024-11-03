@@ -12,7 +12,7 @@ class Sheet():
        
     def get_products(self) -> List[Product]:
         products = []
-        seriazable = []
+        seriazable = [] # Use este para API JSON
         for row in self.__df.iterrows():
             # Ignora células onde a descrição está vazia (sem estoque na planilha)
             if type(row[1]['desc']) != str:
@@ -34,4 +34,4 @@ class Sheet():
         for product in products:
             seriazable.append(product.toJSON())
 
-        return seriazable
+        return products

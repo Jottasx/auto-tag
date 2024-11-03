@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto Tag</title>
-    <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
-    <script src={{ url_for('static', filename='script.js') }} defer></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 <body>
     <div class="container">
         <h1 class="logo">AUTO TAG</h1>
         <div class="product-list">
             <h2>Lista de produtos:</h2>
+            {% if products|length == 0 %}
+                <h5>Nenhum produto foi carregado, carregue no botão ao lado</h5>
+            {% endif  %}
             <div class="table-container">
                 <table id="table">
                     <thead>
@@ -26,18 +29,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- <tr>
-                            <td><input type="checkbox"></td>
-                            <td>5810</td>
-                            <td>HF-ALFACE CRESPA HIDROPONICA</td>
-                            <td>UND 1 X 1 X 1UND</td>
-                            <td>R$ 5,29</td>
-                            <td>tagsell</td>
-                            <td>impresso</td>
-                        </tr> -->
-
-                        
-    
+                        {% for product in products %}
+                            <tr>
+                                <td><input type="checkbox" id="{{product.code}}"></td>
+                                <td>{{ product.code }}</td>
+                                <td>{{ product.description }}</td>
+                                <td>{{ product.emb }}</td>
+                                <td>R${{ product.price|replace(".", ",") }}</td>
+                                <td>{{ product.local }}</td>
+                                <td>{{ "IMPRESSO" if product.printed == 1 else "" }}</td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -68,7 +70,7 @@
                 <img src="{{ url_for('static', filename='img/sasoi006_icon.png') }}" alt="">
                 SASOI006
             </button>
-            <button>
+            <button id="btn_send_to_tagsell">
                 <img src="{{ url_for('static', filename='img/tagsell_icon.png') }}" alt="">
                 TAGSELL
             </button>
