@@ -1,6 +1,5 @@
 import json
 from app.enum.local import get_local_name
-from app.enum.status import get_status_name
 
 class Product():
     
@@ -14,7 +13,6 @@ class Product():
             link: str|None,
             edited: bool,
             printed: bool,
-            status = get_status_name(1),
             local = get_local_name(1),
         ) -> None:
 
@@ -27,7 +25,6 @@ class Product():
         self.__edited = edited
         self.__printed = printed
         self.__local = local
-        self.__status = status
 
     def get_id(self):
         return self.__id
@@ -70,12 +67,6 @@ class Product():
 
     def get_local(self):
         return self.__local
-    
-    def set_status(self, status: int):
-        self.__status = status
-
-    def get_status(self):
-        return self.__status
     
     def toJSON(self):
         return json.dumps(
