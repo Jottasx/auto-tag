@@ -33,9 +33,19 @@ def index():
                 db.session.commit()
             
             return redirect("/")
-            
-            
+
+@main.route('/clear_products', methods=["GET"])                     
+def clear_products():
+    if Product.query.count() > 0:
+        try:
+            db.session.query(Product).delete()
+            db.session.commit()
+        except:
+            return "Não foi possível deletar os produtos"
+        
+        return redirect("/")
     
+    return redirect("/")
 
 
 

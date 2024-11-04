@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto Tag</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
@@ -53,7 +54,7 @@
                     <img src="{{ url_for('static', filename='img/pdf_icon.png') }}" alt="">
                     Imprimir
                 </button>
-                <button class="button">
+                <button class="button" id="btn_products_clear">
                     <img src="{{ url_for('static', filename='img/clear_icon.png') }}" alt="">
                     Limpar
                 </button>
