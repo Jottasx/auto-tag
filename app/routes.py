@@ -1,5 +1,8 @@
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, jsonify
 from .service.pandas_service import Sheet
+from .service.sasoi006_service import Sasoi006
+from .service.selenium_service import Browser
+
 from .models import Product
 from app import db
 
@@ -41,13 +44,50 @@ def clear_products():
             db.session.query(Product).delete()
             db.session.commit()
         except:
-            return "Não foi possível deletar os produtos"
-        
+            return jsonify({"Erro": "Não foi possível deletar os produtos"})        
         return redirect("/")
     
     return redirect("/")
 
+@main.route('/call_sasoi006', methods=["POST"])
+def send_to_sasoi006():
+    data = request.get_json()
+    products = []
+    product_codes = []
+    
+    if data is None:
+        return jsonify({"Erro": "Dados recebidos invalidos"})
+    
 
+    # try:
+
+    for item in data.get("checked_products"):
+        product_codes.append(item.get("product_code"))
+
+    if len(product_codes) > 0:
+        browser = Browser("./driver/chromedriver.exe")
+        sasoi006 = Sasoi006(browser)
+
+        user_data = data.get("user_data")
+
+        if user_data.get("login") and user_data.get("password") and user_data.get("filial"):
+            login = user_data.get("login")
+            password = user_data.get("password")
+            filial = user_data.get("filial")
+            sasoi006.login(login=login, password=password, branch=filial)
+
+            # Fazer query no banco pelos produtos e comparar com a lista de checados, os que tiverem checados precisam ser enviados para a sasoi006
+            
+            prodructs_from_db = Product.query.all()
+            products = list(filter(lambda x: x.code in product_codes, prodructs_from_db))
+
+            sasoi006.fill_products(products)
+
+    # except:
+    #     return jsonify({"Erro": "Erro ao processar os dados SASOI006"})
+
+
+    return jsonify({"Data": products})
 
 
     

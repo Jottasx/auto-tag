@@ -87,5 +87,31 @@
             </div>
         </div>
     </div>
+
+    <div class="modal" id="modal_sasoi">
+        <div class="modal-content">
+            <div class="modal-header">SAVE WEB</div>
+            <div class="modal-body">
+                <div class="input-control">
+                    <label for="sw-login">Login:</label>
+                    <input type="text" placeholder="AD" id="sw-login">
+                </div>
+
+                <div class="input-control">
+                    <label for="sw-login">Senha:</label>
+                    <input type="password" id="sw-password">
+                </div>
+
+                <div class="input-control">
+                    <label for="sw-login">Filial:</label>
+                    <input type="text" placeholder="Ex: 619" id="sw-filial">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel" onclick="close_sasoi_modal()">Cancelar</button>
+                <button class="confirm" onclick="send_to_sasoi006()">Confirmar</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

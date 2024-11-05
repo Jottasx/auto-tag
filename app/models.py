@@ -1,6 +1,9 @@
+import json
 from . import db 
+from app.enum.local import get_local_name
 
 class Product(db.Model):
+
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(5), nullable=False)
     description = db.Column(db.String(200), nullable=False)
@@ -10,3 +13,79 @@ class Product(db.Model):
     edited = db.Column(db.Integer, nullable=False)
     printed = db.Column(db.Integer, nullable=False)
     local = db.Column(db.String(20), nullable=False)
+
+    def __init__(
+            self,
+            id: str|None,
+            code: str,
+            description: str|None,
+            price: float,
+            emb: str,
+            link: str|None,
+            edited: bool,
+            printed: bool,
+            local = get_local_name(1),
+        ) -> None:
+
+        self.id = id
+        self.code = code
+        self.descritpion = description
+        self.price = price
+        self.emb = emb
+        self.link = link
+        self.edited = edited
+        self.printed = printed
+        self.local = local
+
+
+    def get_id(self):
+        return self.id
+    
+    def set_id(self, id: str):
+        self.id = id
+    
+    def get_code(self):
+        return self.code
+    
+    def get_descritpion(self):
+        return self.descritpion
+    
+    def get_price(self):
+        return self.price
+    
+    def get_emb(self):
+        return self.emb
+    
+    def set_product_link(self, link: str):
+        self.link = link
+    
+    def get_link(self):
+        return self.link
+    
+    def set_edited(self, edited: bool):
+        self.edited = edited
+    
+    def is_edited(self):
+        return self.edited
+    
+    def is_printed(self):
+        return self.printed
+    
+    def set_printed(self, printed: bool):
+        self.is_printed = printed
+
+    def set_local(self, local: int):
+        self.local = local
+
+    def get_local(self):
+        return self.local
+    
+    def toJSON(self):
+        return json.dumps(
+            self,
+            default=lambda o: o.__dict__, 
+            sort_keys=True,
+            indent=4)
+
+    def __str__(self) -> str:
+        return f'[ID: {self.get_id()} | Desc: {self.get_descritpion()[:7]} | Code: {self.get_code()} | EMB: {self.get_emb()} | Price: {self.get_price()}]'
