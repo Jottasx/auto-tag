@@ -13,7 +13,7 @@ function get_checked_products() {
         if (input.checked && input.getAttribute("id") != "select_all") {
             checked_products.push(
                 {
-                    ['product_code']: input.getAttribute("id")
+                    ["product_code"]: input.getAttribute("id")
                 }
             )
         }
@@ -40,7 +40,7 @@ btn_product.addEventListener("click", () => {
 // Evento para limpar os produtos do banco de dados e da tabela
 btn_clear.addEventListener("click", () => {
     fetch("/clear_products", {
-        method: 'GET',
+        method: "GET",
     }).then(() => {
         window.location.reload()
     })
@@ -51,7 +51,7 @@ btn_clear.addEventListener("click", () => {
 btn_sasoi006.addEventListener("click", () => {
     const checked_products = get_checked_products()
     if (checked_products.length == 0) {
-        alert("Nenhum produto foi selecionado, por favor selecione pelo menos um produto")
+        open_warning_modal("Selecione ao menos 1 produto para enviar para o Save Web")
         return
     }
 
@@ -61,7 +61,7 @@ btn_sasoi006.addEventListener("click", () => {
 
 // Evento para enviar os produtos para o TagSell
 btn_tagsell.addEventListener("click", () => {
-    // Somente os produtos que estão com 'local' SASOI006 poderão ser enviados
+    // Somente os produtos que estão com "local" SASOI006 poderão ser enviados
 })
 
 // Evento para carregar e processar o arquivo selecionado
@@ -72,7 +72,7 @@ file_input.addEventListener("change", () => {
         formData.append("file", file);
 
         fetch("/", {
-            method: 'POST',
+            method: "POST",
             body: formData
         })
         .then(() => {
@@ -89,12 +89,23 @@ file_input.addEventListener("change", () => {
 
 // Função para abrir o modal
 function open_sasoi_modal() {
-    document.getElementById('modal_sasoi').classList.add('show');
+    document.getElementById("modal_sasoi").classList.add("show");
 }
 
 // Função para fechar o modal
 function close_sasoi_modal() {
-    document.getElementById('modal_sasoi').classList.remove('show');
+    document.getElementById("modal_sasoi").classList.remove("show");
+}
+
+function open_warning_modal(message) {
+    document.getElementById("modal_footer").classList.remove("modal-footer")
+    document.getElementById("modal_footer").classList.add("modal-footer-center")
+    document.getElementById("modal_body").innerHTML = message
+    document.getElementById("modal_warning").classList.add("show");
+}
+
+function close_warning_modal() {
+    document.getElementById("modal_warning").classList.remove("show");
 }
 
 function send_to_sasoi006() {
@@ -108,7 +119,7 @@ function send_to_sasoi006() {
         close_sasoi_modal()
 
         fetch("/call_sasoi006", {
-            method: 'POST',
+            method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },

@@ -198,7 +198,13 @@ th {
     justify-content: space-between;
 }
 
-.modal-footer button {
+.modal-footer-center {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+}
+
+.modal-footer button, .modal-footer-center button {
     padding: 10px 20px;
     font-size: 14px;
     border: none;
@@ -206,12 +212,12 @@ th {
     border-radius: 4px;
 }
 
-.modal-footer .confirm {
+.modal-footer .confirm, .modal-footer-center .confirm {
     background-color: #D05300;
     color: white;
 }
 
-.modal-footer .cancel {
+.modal-footer .cancel, .modal-footer-center .cancel {
     background-color: #ccc;
 }
 
