@@ -6,7 +6,7 @@ const btn_tagsell = document.getElementById("btn_send_to_tagsell");
 const btn_clear = document.getElementById("btn_products_clear")
 
 // Função para auxiliar a verificação de quais inputs estão selecionados na tabela
-function is_one_checked_at_least() {
+function get_checked_products() {
     const inputs = document.querySelectorAll("input[type='checkbox']")
     const checked_products = []
     inputs.forEach((input) => {
@@ -49,7 +49,7 @@ btn_clear.addEventListener("click", () => {
 
 // Evento para enviar os produtos para o Save Web tela SASOI006
 btn_sasoi006.addEventListener("click", () => {
-    const checked_products = is_one_checked_at_least()
+    const checked_products = get_checked_products()
     if (checked_products.length == 0) {
         alert("Nenhum produto foi selecionado, por favor selecione pelo menos um produto")
         return
@@ -57,6 +57,11 @@ btn_sasoi006.addEventListener("click", () => {
 
     open_sasoi_modal()
     
+})
+
+// Evento para enviar os produtos para o TagSell
+btn_tagsell.addEventListener("click", () => {
+    // Somente os produtos que estão com 'local' SASOI006 poderão ser enviados
 })
 
 // Evento para carregar e processar o arquivo selecionado
@@ -98,7 +103,9 @@ function send_to_sasoi006() {
     const filial = document.getElementById("sw-filial");
 
     if (login.value.length > 0 && password.value.length > 0 && filial.value.length > 0) {
-        const checked_products = is_one_checked_at_least(); 
+        const checked_products = get_checked_products(); 
+
+        close_sasoi_modal()
 
         fetch("/call_sasoi006", {
             method: 'POST',
