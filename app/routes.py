@@ -52,7 +52,6 @@ def clear_products():
 @main.route('/call_sasoi006', methods=["POST"])
 def send_to_sasoi006():
     data = request.get_json()
-    products = []
     product_codes = []
     
     if data is None:
@@ -80,7 +79,14 @@ def send_to_sasoi006():
             prodructs_from_db = Product.query.all()
             products = list(filter(lambda x: x.code in product_codes, prodructs_from_db))
 
-            sasoi006.fill_products(products)
+            sended_products = sasoi006.fill_products(products)
+
+            if len(sended_products) > 0:
+                for code in sended_products:
+                    product = Product.query.filter_by(code = code).first()
+                    product.set_local(2)
+                    db.session.commit()
+
             return jsonify({"Mensagem": "Produtos enviados a SASOI006"})
 
     # except:

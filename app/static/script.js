@@ -116,7 +116,7 @@ function send_to_sasoi006() {
         })
         .then((res) => res.json())
         .then((data) => {
-            //window.location.reload()
+            window.location.reload()
         })
         .catch((error) => {
             console.error("Erro na requisição:", error);

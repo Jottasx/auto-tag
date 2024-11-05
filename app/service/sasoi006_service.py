@@ -78,6 +78,7 @@ class Sasoi006():
         select_tag.send_keys(Keys.ENTER)
 
     def fill_products(self, products: List[Product]):
+        sended_products = []
         # Seleciona o campo para preencher o código do produto
         code_field = self.get_browser()\
             .wait_for_element(None, By.ID, 'codigoBarra')
@@ -95,11 +96,18 @@ class Sasoi006():
             # Se os produtos preenchidos chegarem ao limite vamos tentar enviar para o TagSell
             if self.get_product_counter() == self.get_product_limit():
                 self.send_to_tagsell()
+                sended_products.append(product.get_code())
 
         # Se não atigir o limite de produtos e ainda restar, vamos tentar enviar para o TagSell
         if self.get_product_counter() > 0:
-            print(f"[LOG] {self.get_product_counter()} produtos foram enviados para o TagSell")
             self.__send_to_tagsell()
+            sended_products.append(product.get_code())
+
+        try:
+            return sended_products
+        finally:
+            self.get_browser().get_driver().quit()
+        
 
     def __send_to_tagsell(self):
         self.get_browser()\
@@ -110,8 +118,7 @@ class Sasoi006():
             
         # Após enviar para o TagSell temos que configurar novamente o checkbox para o modo Cartaz/A5  
         if self.get_product_counter() > 0:
-            print(f"[LOG] {self.get_product_counter()} produtos foram enviados para o TagSell")
-            self.__send_to_tagsell()
+            self.setup_tag()
 
         # Redefine a contagem de produtos
         self.set_product_counter(int(0))

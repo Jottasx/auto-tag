@@ -75,7 +75,7 @@ class Product(db.Model):
         self.is_printed = printed
 
     def set_local(self, local: int):
-        self.local = local
+        self.local = get_local_name(local)
 
     def get_local(self):
         return self.local
