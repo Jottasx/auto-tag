@@ -1,6 +1,7 @@
 import pandas as pd
 from typing import List
-from app.model.product import Product
+from ..models import Product
+from ..enum.local import get_local_name
 
 class Sheet():
 
@@ -10,9 +11,8 @@ class Sheet():
         except FileNotFoundError as Error:
             print(f'[Erro] A planilha não foi encontrada no caminho "{io}", verifique se o caminho está correto.')
        
-    def get_products(self) -> List[Product]:
+    def get_products(self) :
         products = []
-        seriazable = [] # Use este para API JSON
         for row in self.__df.iterrows():
             # Ignora células onde a descrição está vazia (sem estoque na planilha)
             if type(row[1]['desc']) != str:
@@ -28,10 +28,10 @@ class Sheet():
                     link=None,
                     edited=False,
                     printed=False,
+                    local=get_local_name(1)
                 )
             )
 
-        for product in products:
-            seriazable.append(product.toJSON())
-
         return products
+
+        

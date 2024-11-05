@@ -22,20 +22,13 @@ def index():
             products = sheet.get_products()
 
             for product in products:
-                _product = Product(
-                    code=product.get_code(),
-                    description=product.get_descritpion(),
-                    price=product.get_price(),
-                    emb=product.get_emb(),
-                    link=product.get_link(),
-                    edited=product.is_edited(),
-                    printed=product.is_printed(),
-                    local=product.get_local(),
-                )
-                db.session.add(_product)
-                db.session.commit()
+                db.session.add(product)
+                
+            db.session.commit()    
             
-            return redirect("/")
+            return jsonify({"msg": "ok"})
+        
+        return jsonify({"Erro": "Erro"})
 
 @main.route('/clear_products', methods=["GET"])                     
 def clear_products():

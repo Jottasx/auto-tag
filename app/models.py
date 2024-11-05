@@ -14,30 +14,6 @@ class Product(db.Model):
     printed = db.Column(db.Integer, nullable=False)
     local = db.Column(db.String(20), nullable=False)
 
-    def __init__(
-            self,
-            id: str|None,
-            code: str,
-            description: str|None,
-            price: float,
-            emb: str,
-            link: str|None,
-            edited: bool,
-            printed: bool,
-            local = get_local_name(1),
-        ) -> None:
-
-        self.id = id
-        self.code = code
-        self.descritpion = description
-        self.price = price
-        self.emb = emb
-        self.link = link
-        self.edited = edited
-        self.printed = printed
-        self.local = local
-
-
     def get_id(self):
         return self.id
     
