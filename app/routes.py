@@ -58,7 +58,6 @@ def send_to_sasoi006():
     if data is None:
         return jsonify({"Erro": "Dados recebidos invalidos"})
     
-
     # try:
 
     for item in data.get("checked_products"):
@@ -82,12 +81,13 @@ def send_to_sasoi006():
             products = list(filter(lambda x: x.code in product_codes, prodructs_from_db))
 
             sasoi006.fill_products(products)
+            return jsonify({"Mensagem": "Produtos enviados a SASOI006"})
 
     # except:
     #     return jsonify({"Erro": "Erro ao processar os dados SASOI006"})
 
 
-    return jsonify({"Data": products})
+    return jsonify({"Mensagem": "Erro ao processar"})
 
 
     

@@ -1,4 +1,5 @@
 const file_input = document.getElementById("file_input");
+const select_all = document.getElementById("select_all")
 const btn_product = document.getElementById("btn_load_product");
 const btn_sasoi006 = document.getElementById("btn_send_to_sasoi006");
 const btn_tagsell = document.getElementById("btn_send_to_tagsell");
@@ -20,6 +21,16 @@ function is_one_checked_at_least() {
 
     return checked_products
 }
+
+// Evento para selecionar todos os checkbox a partir do principal
+select_all.addEventListener("click", () => {
+    inputs = document.querySelectorAll("input[type='checkbox']")
+    inputs.forEach((input) => {
+        if (input.getAttribute("id") != "select_all") {
+            input.checked = select_all.checked
+        }
+    })
+})
 
 // Evento para abrir o seletor de arquivos
 btn_product.addEventListener("click", () => {
