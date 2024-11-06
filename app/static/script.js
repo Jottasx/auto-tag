@@ -4,6 +4,7 @@ const btn_product = document.getElementById("btn_load_product");
 const btn_sasoi006 = document.getElementById("btn_send_to_sasoi006");
 const btn_tagsell = document.getElementById("btn_send_to_tagsell");
 const btn_clear = document.getElementById("btn_products_clear")
+const html_console = document.getElementById("console")
 
 // Função para auxiliar a verificação de quais inputs estão selecionados na tabela
 function get_checked_products() {
@@ -20,6 +21,16 @@ function get_checked_products() {
     })
 
     return checked_products
+}
+
+window.onload = function() {
+    if (!sessionStorage.logs) {
+        sessionStorage.setItem("logs", `[OK] [${new Date().toLocaleTimeString()}] - Sistema iniciado com sucesso! <br>`)
+    }
+
+    
+    html_console.innerHTML += sessionStorage.getItem("logs")
+    html_console.scrollTop = html_console.scrollHeight
 }
 
 // Evento para selecionar todos os checkbox a partir do principal
@@ -42,6 +53,7 @@ btn_clear.addEventListener("click", () => {
     fetch("/clear_products", {
         method: "GET",
     }).then(() => {
+        updateConsole("OK", "Lista de protudos foi esvaziada")
         window.location.reload()
     })
     
@@ -76,6 +88,7 @@ file_input.addEventListener("change", () => {
             body: formData
         })
         .then(() => {
+            updateConsole("OK", "Produtos carregados com sucesso")
             window.location.reload()
         })
         .catch(error => {
@@ -115,8 +128,10 @@ function send_to_sasoi006() {
 
     if (login.value.length > 0 && password.value.length > 0 && filial.value.length > 0) {
         const checked_products = get_checked_products(); 
-
+        
         close_sasoi_modal()
+
+        updateConsole("...", "Enviando produtos para o SAVE WEB (SASOI006) aguarde...")
 
         fetch("/call_sasoi006", {
             method: "POST",
@@ -132,14 +147,29 @@ function send_to_sasoi006() {
                 checked_products
             })
         })
-        .then((res) => res.json())
-        .then((data) => {
+        .then(() => {
+            updateConsole("OK", "Produto(s) ENVIADOS para o SAVE WEB (SASOI006)")
             window.location.reload()
         })
         .catch((error) => {
-            console.error("Erro na requisição:", error);
+            updateConsole("ERRO", `Erro na requisição ${error}`)
         });
     } else {
-        console.log("Todos os campos precisam estar preenchidos.");
+        updateConsole("ERRO", "Campos inválidos")
     }
+}
+
+function updateConsole(status, info) {
+    let now = new Date().toLocaleTimeString()
+   
+    logs = sessionStorage.getItem("logs") || ""
+    const new_log = `[${status}] [${now}] - ${info} <br>`
+
+    logs += new_log
+
+    sessionStorage.setItem("logs", logs)
+
+    html_console.innerHTML += sessionStorage.getItem("logs")
+    html_console.scrollTop = html_console.scrollHeight
+
 }

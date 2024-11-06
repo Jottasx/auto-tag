@@ -2,9 +2,9 @@ from flask import Blueprint, render_template, request, redirect, jsonify
 from .service.pandas_service import Sheet
 from .service.sasoi006_service import Sasoi006
 from .service.selenium_service import Browser
-
 from .models import Product
 from app import db
+import datetime
 
 main = Blueprint("main", __name__)
 
@@ -12,6 +12,7 @@ main = Blueprint("main", __name__)
 def index():
     if request.method == "GET":
         products = Product.query.all()
+        
         return render_template('index.html', products=products)
     
     if request.method == "POST":
