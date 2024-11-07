@@ -106,6 +106,7 @@ def send_to_tagsell():
 
         tagsell.login(login, password)
         tagsell.handle_sketch(products)
+        # tagsell.open_product_in_new_tab(products)
         # rascunho
 
         return jsonify({"Data": products})

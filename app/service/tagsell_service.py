@@ -1,5 +1,6 @@
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from ..models import Product
 from ..service.selenium_service import Browser
 from typing import List
@@ -106,9 +107,57 @@ class TagSell():
             .wait_for_element(None, By.ID, "printButton")\
             .click()
         
+        
+        for i in range(1, 5):
+
+            if i == 1:
+                modal_input = self.__get_browser()\
+                    .wait_for_element(None, By.XPATH, f"//label[text()='Dinâmica Comercial']/following-sibling::div[1]//input[1]")
+            
+                modal_input.click()
+                for _ in range(0, 5):
+                    modal_input.send_keys(Keys.ARROW_DOWN)  
+
+                modal_input.send_keys(Keys.ENTER)
+            
+            if i == 2:
+                modal_input = self.__get_browser()\
+                    .wait_for_element(None, By.XPATH, f"//label[text()='Tamanho']/following-sibling::div[1]//input[1]")
+            
+                modal_input.click()
+                for _ in range(0, 10):
+                    modal_input.send_keys(Keys.ARROW_DOWN)  
+
+                modal_input.send_keys(Keys.ENTER)
+                
+            if i == 3:
+                modal_input = self.__get_browser()\
+                    .wait_for_element(None, By.XPATH, f"//label[text()='Layout Coordenada']/following-sibling::div[1]//input[1]")
+            
+                modal_input.click()
+                
+                modal_input.send_keys(Keys.ARROW_DOWN)  
+                modal_input.send_keys(Keys.ARROW_UP) 
+                modal_input.send_keys(Keys.ENTER)
+
+            if i == 4:
+                modal_input = self.__get_browser()\
+                    .wait_for_element(None, By.XPATH, f"//label[text()='Campanha']/following-sibling::div[1]//input[1]")
+            
+                modal_input.click()
+                for _ in range(0, 5):
+                    modal_input.send_keys(Keys.ARROW_DOWN)  
+
+                modal_input.send_keys(Keys.ENTER)
+        
         # Selecionar campos do modal, e criar o cartaz
 
-        time.sleep(30) 
+        self.__get_browser()\
+            .wait_for_element(None, By.XPATH, "//h5[contains(text(), 'Criação de ofertas em massa')]/ancestor::div[contains(@class, 'modal-content')]//button[contains(text(), 'Criar')]")\
+            .click()
+
+        time.sleep(2) 
+        return True
 
     # Método para verificar se um código de um produto está em uma linha HTML
     def __is_in_row(self, code: str, tr: WebElement) -> bool:
