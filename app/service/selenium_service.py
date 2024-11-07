@@ -37,6 +37,7 @@ class Browser():
             EC.visibility_of_element_located((by, identification))
         )
     
+    
     def open_new_tab(self, el: WebElement):
         ActionChains(self.__driver).key_down(Keys.CONTROL).click(el).key_up(Keys.CONTROL).perform()
 

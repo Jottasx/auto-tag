@@ -68,12 +68,23 @@ btn_sasoi006.addEventListener("click", () => {
     }
 
     open_sasoi_modal()
+      
     
 })
 
 // Evento para enviar os produtos para o TagSell
 btn_tagsell.addEventListener("click", () => {
-    // Somente os produtos que estão com "local" SASOI006 poderão ser enviados
+
+    const checked_products = get_checked_products()
+
+    if (checked_products.length == 0) {
+        open_warning_modal("Selecione pelo menos 1 produto")
+        return
+    }
+
+    open_tagsell_modal()
+
+    
 })
 
 // Evento para carregar e processar o arquivo selecionado
@@ -105,9 +116,17 @@ function open_sasoi_modal() {
     document.getElementById("modal_sasoi").classList.add("show");
 }
 
+function open_tagsell_modal() {
+    document.getElementById("modal_tagsell").classList.add("show");
+}
+
 // Função para fechar o modal
 function close_sasoi_modal() {
     document.getElementById("modal_sasoi").classList.remove("show");
+}
+
+function close_tagsell_modal() {
+    document.getElementById("modal_tagsell").classList.remove("show");
 }
 
 function open_warning_modal(message) {
@@ -131,7 +150,7 @@ function send_to_sasoi006() {
         
         close_sasoi_modal()
 
-        updateConsole("...", "Enviando produtos para o SAVE WEB (SASOI006) aguarde...")
+        updateConsole(".....", "Enviando produtos para o SAVE WEB (SASOI006) aguarde...")
 
         fetch("/call_sasoi006", {
             method: "POST",
@@ -147,15 +166,53 @@ function send_to_sasoi006() {
                 checked_products
             })
         })
-        .then(() => {
-            updateConsole("OK", "Produto(s) ENVIADOS para o SAVE WEB (SASOI006)")
+        .then((res) => {
+            return res.json()
+        })
+        .then((data) => {
+            if (data.msg == "Credenciais Inválidas") {
+                updateConsole("ER", "Credenciais inválidas ou bloqueio do usuário, tente novamente mais tarde")
+                return
+            }
+
+            updateConsole("OK", "Produto(s) ENVIADOS para o SAVEWEB (SASOI006)")
             window.location.reload()
         })
-        .catch((error) => {
-            updateConsole("ERRO", `Erro na requisição ${error}`)
-        });
     } else {
-        updateConsole("ERRO", "Campos inválidos")
+        updateConsole("ER", "Campos inválidos")
+    }
+}
+
+function send_to_tagsell() {
+    const login = document.getElementById("ts-login");
+    const password = document.getElementById("ts-password");
+
+    if (login.value.length > 0 && password.value.length > 0) {
+        const checked_products = get_checked_products(); 
+        
+        close_tagsell_modal()
+
+        updateConsole(".....", "Enviando produtos para o Tag Sell (RASCUNHO) aguarde...")
+
+        fetch("/call_tagsell", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                user_data: {
+                    login: login.value,
+                    password: password.value,
+                },
+                checked_products
+            })
+        })
+        .then(() => {
+            updateConsole("OK", "Produto(s) ENVIADOS para o Tag Sell (RASCUNHO)")
+            
+        })
+    } else {
+        updateConsole("ER", "Campos inválidos")
     }
 }
 

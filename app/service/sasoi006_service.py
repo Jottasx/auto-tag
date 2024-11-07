@@ -1,6 +1,8 @@
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-#from ..model.product import Product
+from selenium.webdriver.support import expected_conditions as EC
 from ..models import Product
 from ..service.selenium_service import Browser
 from typing import List
@@ -41,9 +43,17 @@ class Sasoi006():
         self.get_browser()\
             .wait_for_element(None, By.ID, 'entrar')\
             .click()
-        
+
         # Aguarda o tempo da pagina carregar
         time.sleep(1)
+
+        # # Verifica se o usuário errou a senha, quando o usuário erra a senha o site mostra uma div com erro
+        # error_div = WebDriverWait(self.get_browser().get_driver(), 1).until(
+        #     EC.visibility_of_any_elements_located((By.CLASS_NAME, "error-message"))
+        # )
+
+        # if len(error_div) > 0:
+        #     return False
         
         # Escolhe a filial que vamos logar... ¬¬
         branch_checkbox = self.get_browser()\
@@ -59,6 +69,8 @@ class Sasoi006():
         # Redireciona para a tela SASOI006 do Save Web
         self.get_browser()\
             .redirect_to(f'https://srvapp{branch}.br-atacadao.corp/sasoi006/execute.do')
+        
+        return True
     
     # Esse método prepara a tela para enviar os códigos do SaveWeb para o TagSell
     def setup_tag(self):

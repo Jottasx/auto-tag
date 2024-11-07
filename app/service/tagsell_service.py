@@ -1,7 +1,7 @@
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
-from app.model.product import Product
-from service.selenium_service import Browser
+from ..models import Product
+from ..service.selenium_service import Browser
 from typing import List
 import time
 import re
@@ -85,28 +85,30 @@ class TagSell():
                     self.__product_rows.append(row)
 
     # Método para transformar os rascunhos do TagSell em Cartazes
-    # def handle_sketch(self, products: List[Product]):
-    #     self.__get_browser()\
-    #         .redirect_to("https://app.tagsell.com.br/online/automation/posters")           
-    #     time.sleep(4)
+    def handle_sketch(self, products: List[Product]):
+        self.__get_browser()\
+            .redirect_to("https://app.tagsell.com.br/online/automation/posters")           
+        time.sleep(4)
 
-    #     self.set_product_rows(products)
+        self.set_product_rows(products)
 
-    #     rows = self.get_product_rows()
+        rows = self.get_product_rows()
 
-    #     for row in rows:
-    #         for product in products:
-    #             if self.__is_in_row(code=product.get_code(), tr=row):
-    #                 row.find_element(By.XPATH, "//input[contains(@type='checkbox')]")\
-    #                     .click()
+        for row in rows:
+            for product in products:
+                if self.__is_in_row(code=product.get_code(), tr=row):
+                    row.find_element(By.XPATH, ".//input[@type='checkbox']")\
+                        .click()
 
-    #     time.sleep(1)
+        time.sleep(1)
 
-    #     self.__get_browser()\
-    #         .wait_for_element(None, By.ID, "printButton")\
-    #         .click()
+        self.__get_browser()\
+            .wait_for_element(None, By.ID, "printButton")\
+            .click()
+        
+        # Selecionar campos do modal, e criar o cartaz
 
-    #     time.sleep(30) 
+        time.sleep(30) 
 
     # Método para verificar se um código de um produto está em uma linha HTML
     def __is_in_row(self, code: str, tr: WebElement) -> bool:
@@ -117,7 +119,7 @@ class TagSell():
             # Verifica se algum <td> possui o código interno do produto
             if match:
                 code_found = match.group(1) # Salva o código encontrado
-                if int(code_found) == code:
+                if code_found == code:
                     return True
         return False
 
@@ -136,16 +138,19 @@ class TagSell():
                 # Selecionando os inputs de embalagem, preço e o botão de salvar
                 input_emb = self.__get_browser()\
                     .wait_for_element(
+                        None,
                         By.XPATH,
                         "//label[contains(text(),'Embalagem de atacado')]/following-sibling::input"
                     )
                 input_price = self.__get_browser()\
                     .wait_for_element(
+                        None,
                         By.XPATH,
                         "//label[contains(text(),'Preço no Varejo')]/following-sibling::input"
                     )
                 btn_save = self.__get_browser()\
                     .wait_for_element(
+                        None,
                         By.XPATH,
                         "//div[contains(@class, 'div-btns')]//a"
                     )
@@ -182,7 +187,7 @@ class TagSell():
     def open_product_in_new_tab(self, product_row: WebElement, product: Product):
         # Seleciona o Edit_Button e preenche o link do produto
         edit_button = self.__get_browser()\
-            .wait_for_element(element=product_row, by=By.XPATH, identification='.//a[@title="Editar"]')
+            .wait_for_element(element=product_row, visibility="v", by=By.XPATH, identification='.//a[@title="Editar"]')
         
         # Preenche o ID e o Link do produto
         product.set_id(edit_button.get_attribute("href").split("/")[-2])
@@ -225,7 +230,7 @@ class TagSell():
             for product in products:
                 # Verifica se o ID é o mesmo do produto e seleciona o checkbox para impressão
                 if row_id == product.get_id() and product.is_edited() == True:
-                    row.find_element(By.TAG_NAME, "td")\
+                    row.find_element(None, By.TAG_NAME, "td")\
                         .find_element(By.ID, f"selectable-{product.get_id()}")\
                         .click()
                     time.sleep(1)

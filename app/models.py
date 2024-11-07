@@ -56,12 +56,23 @@ class Product(db.Model):
     def get_local(self):
         return self.local
     
+    # Método para converter o objeto em dicionário
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "code": self.code,
+            "description": self.description,
+            "price": self.price,
+            "emb": self.emb,
+            "link": self.link,
+            "edited": self.edited,
+            "printed": self.printed,
+            "local": self.local
+        }
+    
+    # Método para serializar em JSON
     def toJSON(self):
-        return json.dumps(
-            self,
-            default=lambda o: o.__dict__, 
-            sort_keys=True,
-            indent=4)
+        return json.dumps(self.to_dict(), indent=4)
 
     def __str__(self) -> str:
         return f'[ID: {self.get_id()} | Desc: {self.get_descritpion()[:7]} | Code: {self.get_code()} | EMB: {self.get_emb()} | Price: {self.get_price()}]'

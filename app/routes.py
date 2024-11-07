@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, jsonify
 from .service.pandas_service import Sheet
 from .service.sasoi006_service import Sasoi006
 from .service.selenium_service import Browser
+from .service.tagsell_service import TagSell
 from .models import Product
 from app import db
 import datetime
@@ -12,7 +13,7 @@ main = Blueprint("main", __name__)
 def index():
     if request.method == "GET":
         products = Product.query.all()
-        
+
         return render_template('index.html', products=products)
     
     if request.method == "POST":
@@ -50,8 +51,6 @@ def send_to_sasoi006():
     
     if data is None:
         return jsonify({"Erro": "Dados recebidos invalidos"})
-    
-    # try:
 
     for item in data.get("checked_products"):
         product_codes.append(item.get("product_code"))
@@ -66,7 +65,8 @@ def send_to_sasoi006():
             login = user_data.get("login")
             password = user_data.get("password")
             filial = user_data.get("filial")
-            sasoi006.login(login=login, password=password, branch=filial)
+            if not sasoi006.login(login=login, password=password, branch=filial):
+                return jsonify({"msg": "Credenciais Inválidas"})
 
             # Fazer query no banco pelos produtos e comparar com a lista de checados, os que tiverem checados precisam ser enviados para a sasoi006
             
@@ -83,12 +83,31 @@ def send_to_sasoi006():
 
             return jsonify({"Mensagem": "Produtos enviados a SASOI006"})
 
-    # except:
-    #     return jsonify({"Erro": "Erro ao processar os dados SASOI006"})
-
-
     return jsonify({"Mensagem": "Erro ao processar"})
 
+@main.route('/call_tagsell', methods=["POST"])
+def send_to_tagsell():
+    data = request.get_json()
 
-    
+    if data:
+        user_data = data.get("user_data")
+        checked_products = data.get("checked_products")
+        products = []
 
+        login = user_data.get("login")
+        password = user_data.get("password")
+
+        # Procura no banco de dados os produtos que estão marcados na tabela
+        for code in checked_products:
+            products.append(Product.query.filter_by(code = code['product_code']).first())
+
+        browser = Browser("./driver/chromedriver.exe")
+        tagsell = TagSell(browser)
+
+        tagsell.login(login, password)
+        tagsell.handle_sketch(products)
+        # rascunho
+
+        return jsonify({"Data": products})
+
+    return jsonify({"Data": "ok"})
