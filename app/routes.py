@@ -105,10 +105,13 @@ def send_to_tagsell():
         tagsell = TagSell(browser)
 
         tagsell.login(login, password)
-        tagsell.handle_sketch(products)
-        # tagsell.open_product_in_new_tab(products)
-        # rascunho
+        #tagsell.handle_sketch(products)
+        tagsell.open_products_in_new_tab(products)
+        tagsell.edit_products(products)
+        tagsell.close_edited_products_tabs(products)
+        tagsell.print_products(products)
 
-        return jsonify({"Data": products})
+
+        return jsonify({"Data": "ok"})
 
     return jsonify({"Data": "ok"})

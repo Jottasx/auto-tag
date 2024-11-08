@@ -21,13 +21,13 @@ class Product(db.Model):
         self.id = id
     
     def get_code(self):
-        return self.code
+        return self.code.replace(".0", "")
     
     def get_descritpion(self):
         return self.descritpion
     
     def get_price(self):
-        return self.price
+        return f"{float(self.price):.2f}"
     
     def get_emb(self):
         return self.emb

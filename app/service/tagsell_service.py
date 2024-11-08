@@ -8,17 +8,25 @@ import time
 import re
 
 
-class TagSell():
+class TagSell:
 
     def __init__(self, browser: Browser):
         self.__browser = browser
         self.__product_rows = []
+
+        self.__product_tab_limit = int(8)
 
     def __get_browser(self):
         return self.__browser
     
     def get_product_rows(self):
         return self.__product_rows  
+    
+    def clear_product_rows(self):
+        self.__product_rows.clear()
+
+    def get_product_tab_limit(self):
+        return self.__product_tab_limit
     
     # Médoto para fazer login no TagSell
     def login(self, login: str, password: str):
@@ -69,6 +77,9 @@ class TagSell():
 
     # Médoto para preencher a lista de linhas HTML dos produtos
     def set_product_rows(self, products: List[Product]):
+        # Limpa a tabela para não duplicar as linhas
+        self.clear_product_rows()
+
         # Tabela HTML do TagSell
         table = self.__get_browser()\
             .wait_for_element(None, By.CSS_SELECTOR, ".table.table-striped.table-fw-widget.table-hover")
@@ -174,80 +185,104 @@ class TagSell():
 
                     
     # Médoto para editar um único produto
-    def edit_product(self, product: Product) -> Product:
+    def edit_products(self, products: List[Product]):
         driver = self.__get_browser().get_driver()
-        # Percorre as janelas abertas do Browser
-        for window_handle in driver.window_handles:
-            driver.switch_to.window(window_handle)
+        for product in products:
+            # Percorre as janelas abertas do Browser
+            for window_handle in driver.window_handles:
+                driver.switch_to.window(window_handle)
 
-            # Verifica se a janela atual aberta é a do link do produto
-            if driver.current_url == product.get_link():
-                time.sleep(1) # Aguarda a aba ser escolhida
+                
+                # Verifica se a janela atual aberta é a do link do produto
+                if driver.current_url == product.get_link():
+                    time.sleep(1) # Aguarda a aba ser escolhida
 
-                # Selecionando os inputs de embalagem, preço e o botão de salvar
-                input_emb = self.__get_browser()\
-                    .wait_for_element(
-                        None,
-                        By.XPATH,
-                        "//label[contains(text(),'Embalagem de atacado')]/following-sibling::input"
-                    )
-                input_price = self.__get_browser()\
-                    .wait_for_element(
-                        None,
-                        By.XPATH,
-                        "//label[contains(text(),'Preço no Varejo')]/following-sibling::input"
-                    )
-                btn_save = self.__get_browser()\
-                    .wait_for_element(
-                        None,
-                        By.XPATH,
-                        "//div[contains(@class, 'div-btns')]//a"
-                    )
+                    # Selecionando os inputs de embalagem, preço e o botão de salvar
+                    input_emb = self.__get_browser()\
+                        .wait_for_element(
+                            None,
+                            By.XPATH,
+                            "//label[contains(text(),'Embalagem de atacado')]/following-sibling::input"
+                        )
+                    input_price = self.__get_browser()\
+                        .wait_for_element(
+                            None,
+                            By.XPATH,
+                            "//label[contains(text(),'Preço no Varejo')]/following-sibling::input"
+                        )
+                    btn_save = self.__get_browser()\
+                        .wait_for_element(
+                            None,
+                            By.XPATH,
+                            "//div[contains(@class, 'div-btns')]//a"
+                        )
 
-                # Aqui queremos somente quantidade dentro da caixa : 
-                # CXA 1 X 36 X 142G -> 36
-                emb_box_number = product.get_emb().split(" X ")[1]
+                    # Aqui queremos somente quantidade dentro da caixa :
+                    # CXA 1 X 36 X 142G -> 36
+                    emb_box_number = int(product.get_emb().split(" X ")[1])
 
-                # Aqui temos que copiar o conteúdo do input da embalagem para usarmos depois
-                input_emb_value = input_emb.get_attribute("value")
-                input_emb.clear()
+                    # Aqui temos que copiar o conteúdo do input da embalagem para usarmos depois
+                    input_emb_value = input_emb.get_attribute("value")
+                    input_emb.clear()
 
-                # Agora vamos atualizar o input da embalagem com o novo valor caso tenha
-                if input_emb_value != '':
-                    # Resultado esperado -> CXA C/ XX R$ XX,XX
-                    input_emb.send_keys(
-                        f"{input_emb_value.split('R$ ')[0]}R$ {(product.get_price() * emb_box_number):.2f}".replace(".", ",")
-                    )
+                    # Agora vamos atualizar o input da embalagem com o novo valor caso tenha
+                    if input_emb_value != '':
+                        # Resultado esperado -> CXA C/ XX R$ XX,XX
+                        input_emb.send_keys(
+                            f"{input_emb_value.split('R$ ')[0]}R$ {(float(product.get_price()) * emb_box_number):.2f}".replace(".", ",")
+                        )
 
-                # Atualiza o preço do produto
-                input_price.clear()
-                input_price.send_keys(product.get_price())
+                    # Atualiza o preço do produto
+                    input_price.clear()
+                    input_price.send_keys(product.get_price())
 
-                # Salva as alterações do produto no TagSell
-                btn_save.click()
+                    # Salva as alterações do produto no TagSell
+                    btn_save.click()
 
-                time.sleep(1)
+                    time.sleep(1)
 
-                product.set_edited(True)
-                return product
+                    product.set_edited(True)
 
 
     # Médoto para abrir um produto em outra aba
-    def open_product_in_new_tab(self, product_row: WebElement, product: Product):
-        # Seleciona o Edit_Button e preenche o link do produto
-        edit_button = self.__get_browser()\
-            .wait_for_element(element=product_row, visibility="v", by=By.XPATH, identification='.//a[@title="Editar"]')
-        
-        # Preenche o ID e o Link do produto
-        product.set_id(edit_button.get_attribute("href").split("/")[-2])
-        product.set_product_link(edit_button.get_attribute("href"))
+    def open_products_in_new_tab(self, products: List[Product]):
 
-        self.__get_browser()\
-            .get_driver()\
-            .execute_script(f"window.open('{product.get_link()}', '_blank');")
+        # Se a página já estiver nos cartazes, não vai precisar redirecionar
+        link = "https://app.tagsell.com.br/online/posters"
+        driver = self.__get_browser().get_driver()
+        if driver.current_url != link:
+            self.__get_browser().redirect_to(link)
+
+        time.sleep(2)
+
+        self.set_product_rows(products)
+
+        product_count = int(0)
+        opened_products = []
+
+        for product in products:
+            for product_row in self.get_product_rows():
+                if product_count == self.get_product_tab_limit():
+                    self.edit_products(opened_products)
+                    self.close_edited_products_tabs(opened_products)
+
+                # Seleciona o Edit_Button e preenche o link do produto
+                edit_button = self.__get_browser()\
+                    .wait_for_element(el=product_row, by=By.XPATH, identification='.//a[@title="Editar"]')
+
+                # Preenche o ID e o Link do produto
+                product.set_id(edit_button.get_attribute("href").split("/")[-2])
+                product.set_product_link(edit_button.get_attribute("href"))
+
+                self.__get_browser()\
+                    .get_driver()\
+                    .execute_script(f"window.open('{product.get_link()}', '_blank');")
+                
+                product_count += 1
+                opened_products.append(product)
     
     # Médoto para fechar as abas dos produtos que já foram editados
-    def close_printed_products_tabs(self, products: List[Product]):
+    def close_edited_products_tabs(self, products: List[Product]):
         driver = self.__get_browser().get_driver()
         main_window: str|None = None
         # Percorre a lista de abas abertas e procura a página principal
@@ -260,7 +295,7 @@ class TagSell():
             # Para cada aba aberta no navegador verifica se o link do produto bate, se ele já foi editado e fecha a aba.
             for window in driver.window_handles:
                 driver.switch_to.window(window)
-                if driver.current_url == product.get_link() and product.is_edited == True:
+                if driver.current_url == product.get_link() and product.is_edited() == True:
                     driver.close()
 
         # Voltar para a aba principal
@@ -269,6 +304,10 @@ class TagSell():
 
     # Médoto para imprimir um produto
     def print_products(self, products: List[Product]):
+        
+        # Atualiza as linhas dos produtos
+        self.set_product_rows(products)
+
         rows = self.get_product_rows()
         for row in rows:
             row_id = self.__get_browser()\
@@ -279,7 +318,7 @@ class TagSell():
             for product in products:
                 # Verifica se o ID é o mesmo do produto e seleciona o checkbox para impressão
                 if row_id == product.get_id() and product.is_edited() == True:
-                    row.find_element(None, By.TAG_NAME, "td")\
+                    row.find_element(By.TAG_NAME, "td")\
                         .find_element(By.ID, f"selectable-{product.get_id()}")\
                         .click()
                     time.sleep(1)
