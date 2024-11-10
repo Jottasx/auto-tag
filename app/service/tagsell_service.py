@@ -33,13 +33,13 @@ class TagSell:
         self.__get_browser()\
             .redirect_to("https://app.tagsell.com.br/login")
         self.__get_browser()\
-            .wait_for_element(el=None, by=By.ID, identification='email')\
+            .wait_for_element(el=None, by=By.ID, identification='email', timeout=4)\
             .send_keys(login)
         self.__get_browser()\
-            .wait_for_element(el=None, by=By.ID, identification='password')\
+            .wait_for_element(el=None, by=By.ID, identification='password', timeout=4)\
             .send_keys(password)
         self.__get_browser()\
-            .wait_for_element(el=None, by=By.XPATH, identification='//button[@type="submit"]')\
+            .wait_for_element(el=None, by=By.XPATH, identification='//button[@type="submit"]', timeout=4)\
             .click()
         
         time.sleep(1)
@@ -82,7 +82,7 @@ class TagSell:
 
         # Tabela HTML do TagSell
         table = self.__get_browser()\
-            .wait_for_element(None, By.CSS_SELECTOR, ".table.table-striped.table-fw-widget.table-hover")
+            .wait_for_element(None, By.CSS_SELECTOR, ".table.table-striped.table-fw-widget.table-hover", 4)
         
         # Rola a tabela até o fim
         self.scroll_table(table)
@@ -115,7 +115,7 @@ class TagSell:
         time.sleep(1)
 
         self.__get_browser()\
-            .wait_for_element(None, By.ID, "printButton")\
+            .wait_for_element(None, By.ID, "printButton", 4)\
             .click()
         
         
@@ -123,7 +123,7 @@ class TagSell:
 
             if i == 1:
                 modal_input = self.__get_browser()\
-                    .wait_for_element(None, By.XPATH, f"//label[text()='Dinâmica Comercial']/following-sibling::div[1]//input[1]")
+                    .wait_for_element(None, By.XPATH, f"//label[text()='Dinâmica Comercial']/following-sibling::div[1]//input[1]", 4)
             
                 modal_input.click()
                 for _ in range(0, 5):
@@ -133,7 +133,7 @@ class TagSell:
             
             if i == 2:
                 modal_input = self.__get_browser()\
-                    .wait_for_element(None, By.XPATH, f"//label[text()='Tamanho']/following-sibling::div[1]//input[1]")
+                    .wait_for_element(None, By.XPATH, f"//label[text()='Tamanho']/following-sibling::div[1]//input[1]", 4)
             
                 modal_input.click()
                 for _ in range(0, 10):
@@ -143,7 +143,7 @@ class TagSell:
                 
             if i == 3:
                 modal_input = self.__get_browser()\
-                    .wait_for_element(None, By.XPATH, f"//label[text()='Layout Coordenada']/following-sibling::div[1]//input[1]")
+                    .wait_for_element(None, By.XPATH, f"//label[text()='Layout Coordenada']/following-sibling::div[1]//input[1]", 4)
             
                 modal_input.click()
                 
@@ -153,7 +153,7 @@ class TagSell:
 
             if i == 4:
                 modal_input = self.__get_browser()\
-                    .wait_for_element(None, By.XPATH, f"//label[text()='Campanha']/following-sibling::div[1]//input[1]")
+                    .wait_for_element(None, By.XPATH, f"//label[text()='Campanha']/following-sibling::div[1]//input[1]", 4)
             
                 modal_input.click()
                 for _ in range(0, 5):
@@ -164,7 +164,7 @@ class TagSell:
         # Selecionar campos do modal, e criar o cartaz
 
         self.__get_browser()\
-            .wait_for_element(None, By.XPATH, "//h5[contains(text(), 'Criação de ofertas em massa')]/ancestor::div[contains(@class, 'modal-content')]//button[contains(text(), 'Criar')]")\
+            .wait_for_element(None, By.XPATH, "//h5[contains(text(), 'Criação de ofertas em massa')]/ancestor::div[contains(@class, 'modal-content')]//button[contains(text(), 'Criar')]", 4)\
             .click()
 
         time.sleep(2) 
@@ -202,19 +202,23 @@ class TagSell:
                         .wait_for_element(
                             None,
                             By.XPATH,
-                            "//label[contains(text(),'Embalagem de atacado')]/following-sibling::input"
+                            "//label[contains(text(),'Embalagem de atacado')]/following-sibling::input",
+                            4
+                            
                         )
                     input_price = self.__get_browser()\
                         .wait_for_element(
                             None,
                             By.XPATH,
-                            "//label[contains(text(),'Preço no Varejo')]/following-sibling::input"
+                            "//label[contains(text(),'Preço no Varejo')]/following-sibling::input",
+                            4
                         )
                     btn_save = self.__get_browser()\
                         .wait_for_element(
                             None,
                             By.XPATH,
-                            "//div[contains(@class, 'div-btns')]//a"
+                            "//div[contains(@class, 'div-btns')]//a",
+                            4
                         )
 
                     # Aqui queremos somente quantidade dentro da caixa :
@@ -268,7 +272,7 @@ class TagSell:
 
                 # Seleciona o Edit_Button e preenche o link do produto
                 edit_button = self.__get_browser()\
-                    .wait_for_element(el=product_row, by=By.XPATH, identification='.//a[@title="Editar"]')
+                    .wait_for_element(el=product_row, by=By.XPATH, identification='.//a[@title="Editar"]', timeout=4)
 
                 # Preenche o ID e o Link do produto
                 product.set_id(edit_button.get_attribute("href").split("/")[-2])
@@ -311,7 +315,7 @@ class TagSell:
         rows = self.get_product_rows()
         for row in rows:
             row_id = self.__get_browser()\
-                    .wait_for_element(el=row, by=By.XPATH, identification='.//a[@title="Editar"]')\
+                    .wait_for_element(el=row, by=By.XPATH, identification='.//a[@title="Editar"]', timeout=4)\
                     .get_attribute("href")\
                     .split("/")[-2]
             
@@ -326,14 +330,14 @@ class TagSell:
                 
             # O botão de imprimir só aparece após 1 ou mais checkbox forem selecionados
             self.__get_browser()\
-                .wait_for_element(None, By.ID, 'printButton')\
+                .wait_for_element(None, By.ID, 'printButton', 4)\
                 .click()
             
             time.sleep(1)
             
             # Clica no botão sim do modal
             self.__get_browser()\
-                .wait_for_element(None, By.XPATH, "//h5[contains(text(), 'Tem certeza que deseja imprimir?')]/ancestor::div[contains(@class, 'modal-content')]//button[contains(text(), 'Sim')]")\
+                .wait_for_element(None, By.XPATH, "//h5[contains(text(), 'Tem certeza que deseja imprimir?')]/ancestor::div[contains(@class, 'modal-content')]//button[contains(text(), 'Sim')]", 4)\
                 .click()
             
             time.sleep(1)

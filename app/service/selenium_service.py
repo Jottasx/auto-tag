@@ -29,11 +29,11 @@ class Browser():
     def redirect_to(self, url: str):
         self.__driver.get(url)
 
-    def wait_for_element(self, el: WebElement|None, by: By, identification: str):
+    def wait_for_element(self, el: WebElement|None, by: By, identification: str, timeout: float):
         # Se for recebido um elemento HTML, ele será usado
         #  caso contrário por padrão será usado o driver do Browser
         target = (self.__driver if el == None else el)
-        return WebDriverWait(target, 4).until(
+        return WebDriverWait(target, timeout).until(
             EC.visibility_of_element_located((by, identification))
         )
     
