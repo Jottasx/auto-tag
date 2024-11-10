@@ -21,7 +21,7 @@ class Product(db.Model):
         self.id = id
     
     def get_code(self):
-        return self.code.replace(".0", "")
+        return self.code
     
     def get_descritpion(self):
         return self.descritpion

@@ -104,16 +104,15 @@ class Sasoi006():
             code_field.send_keys(str(product.get_code())+'100') 
             code_field.send_keys(Keys.ENTER)
             self.set_product_counter(self.get_product_counter() + 1)
+            sended_products.append(product.get_code())
             
             # Se os produtos preenchidos chegarem ao limite vamos tentar enviar para o TagSell
             if self.get_product_counter() == self.get_product_limit():
                 self.send_to_tagsell()
-                sended_products.append(product.get_code())
 
         # Se não atigir o limite de produtos e ainda restar, vamos tentar enviar para o TagSell
         if self.get_product_counter() > 0:
             self.__send_to_tagsell()
-            sended_products.append(product.get_code())
 
         try:
             return sended_products
@@ -121,7 +120,7 @@ class Sasoi006():
             self.get_browser().get_driver().quit()
         
 
-    def __send_to_tagsell(self):
+    def send_to_tagsell(self):
         self.get_browser()\
             .wait_for_element(None, By.ID, 'btnImprimir')\
             .click()

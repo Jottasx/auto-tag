@@ -77,7 +77,7 @@ def send_to_sasoi006():
 
             if len(sended_products) > 0:
                 for code in sended_products:
-                    product = Product.query.filter_by(code = code).first()
+                    product = Product.query.filter(Product.code == code).first()
                     product.set_local(2)
                     db.session.commit()
 
@@ -105,7 +105,7 @@ def send_to_tagsell():
         tagsell = TagSell(browser)
 
         tagsell.login(login, password)
-        #tagsell.handle_sketch(products)
+        tagsell.handle_sketch(products)
         tagsell.open_products_in_new_tab(products)
         tagsell.edit_products(products)
         tagsell.close_edited_products_tabs(products)

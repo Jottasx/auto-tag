@@ -21,7 +21,7 @@ class Sheet():
             products.append(
                 Product(
                     id=None,
-                    code=row[1]['cod'],
+                    code=int(row[1]['cod']),
                     description=row[1]['desc'],
                     price=row[1]['preço'],
                     emb=row[1]['embb'],
