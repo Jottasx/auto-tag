@@ -106,10 +106,13 @@ def send_to_tagsell():
 
         tagsell.login(login, password)
         tagsell.handle_sketch(products)
-        tagsell.open_products_in_new_tab(products)
-        tagsell.edit_products(products)
-        tagsell.close_edited_products_tabs(products)
-        tagsell.print_products(products)
+
+        opened_products = tagsell.open_products_in_new_tab(products)
+
+        edited_products = tagsell.edit_products(opened_products)
+
+        tagsell.close_edited_products_tabs(edited_products)
+        tagsell.print_products(edited_products)
 
 
         return jsonify({"Data": "ok"})

@@ -14,8 +14,6 @@ class TagSell:
         self.__browser = browser
         self.__product_rows = []
 
-        self.__product_tab_limit = int(8)
-
     def __get_browser(self):
         return self.__browser
     
@@ -187,12 +185,14 @@ class TagSell:
     # Médoto para editar um único produto
     def edit_products(self, products: List[Product]):
         driver = self.__get_browser().get_driver()
+
+        edited_products = []
+
         for product in products:
             # Percorre as janelas abertas do Browser
             for window_handle in driver.window_handles:
                 driver.switch_to.window(window_handle)
 
-                
                 # Verifica se a janela atual aberta é a do link do produto
                 if driver.current_url == product.get_link():
                     time.sleep(1) # Aguarda a aba ser escolhida
@@ -246,7 +246,10 @@ class TagSell:
                     time.sleep(1)
 
                     product.set_edited(True)
+                    edited_products.append(product)
 
+
+        return edited_products
 
     # Médoto para abrir um produto em outra aba
     def open_products_in_new_tab(self, products: List[Product]):
@@ -261,30 +264,30 @@ class TagSell:
 
         self.set_product_rows(products)
 
-        product_count = int(0)
         opened_products = []
 
         for product in products:
             for product_row in self.get_product_rows():
-                if product_count == self.get_product_tab_limit():
-                    self.edit_products(opened_products)
-                    self.close_edited_products_tabs(opened_products)
+                if self.__is_in_row(product.get_code(), product_row):
 
-                # Seleciona o Edit_Button e preenche o link do produto
-                edit_button = self.__get_browser()\
-                    .wait_for_element(el=product_row, by=By.XPATH, identification='.//a[@title="Editar"]', timeout=4)
+                    # Seleciona o Edit_Button e preenche o link do produto
+                    edit_button = self.__get_browser()\
+                        .wait_for_element(el=product_row, by=By.XPATH, identification='.//a[@title="Editar"]', timeout=4)
 
-                # Preenche o ID e o Link do produto
-                product.set_id(edit_button.get_attribute("href").split("/")[-2])
-                product.set_product_link(edit_button.get_attribute("href"))
+                    # Preenche o ID e o Link do produto
+                    product.set_id(edit_button.get_attribute("href").split("/")[-2])
+                    product.set_product_link(edit_button.get_attribute("href"))
 
-                self.__get_browser()\
+                    self.__get_browser()\
                     .get_driver()\
                     .execute_script(f"window.open('{product.get_link()}', '_blank');")
-                
-                product_count += 1
-                opened_products.append(product)
-    
+
+                    opened_products.append(product)
+                    continue
+
+            
+        return opened_products
+
     # Médoto para fechar as abas dos produtos que já foram editados
     def close_edited_products_tabs(self, products: List[Product]):
         driver = self.__get_browser().get_driver()
